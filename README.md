@@ -1,4 +1,4 @@
-# PathLab India — Career Discovery Platform (Classes 9–12)
+# FIGUROUT — Career Discovery Platform (Classes 9–12)
 ### Full-Stack Implementation with React, Node.js, SQLite, and Google Gemma 4
 
 [![Build Status](https://img.shields.io/badge/Build-Passing-emerald)](https://github.com)
