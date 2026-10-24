@@ -31,7 +31,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           id="nav-brand-home"
         >
           <div className="nav-logo-box">
-            <Compass className="w-5 h-5 text-white" />
+            <Compass className="w-6 h-6 text-ink-primary" />
           </div>
           <div>
             <div className="nav-brand-title">PathLab India</div>
@@ -64,7 +64,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               className={`nav-item ${activeTab === 'results' ? 'active' : ''}`}
               onClick={() => setActiveTab('results')}
             >
-              <Layers className="w-4 h-4" />
+              <Layers className="w-4 h-4 text-cobalt" />
               My Matches
             </button>
           )}
@@ -91,33 +91,32 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <button
             id="btn-nav-compare"
-            className="btn btn-secondary btn-sm"
+            className="btn-brutal btn-white btn-brutal-sm"
             onClick={openCompareModal}
             title="Compare multiple careers side-by-side"
           >
-            <Layers className="w-4 h-4 text-indigo-400" />
+            <Layers className="w-4 h-4 text-cobalt" />
             Compare
           </button>
 
           <button
             id="btn-nav-saved"
-            className="btn btn-secondary btn-sm"
+            className="btn-brutal btn-yellow btn-brutal-sm"
             onClick={openSavedDrawer}
             title="View your saved careers"
             style={{ position: 'relative' }}
           >
-            <Bookmark className="w-4 h-4 text-teal-400" />
+            <Bookmark className="w-4 h-4 text-ink-primary" />
             Saved
             {savedCount > 0 && (
               <span
+                className="sticker sticker-coral"
                 style={{
-                  background: 'var(--primary-500)',
-                  color: '#fff',
-                  borderRadius: '10px',
-                  padding: '2px 6px',
-                  fontSize: '0.7rem',
-                  fontWeight: 700,
+                  fontSize: '0.68rem',
+                  padding: '1px 6px',
+                  borderRadius: '999px',
                   marginLeft: '4px',
+                  boxShadow: 'none',
                 }}
               >
                 {savedCount}
@@ -129,3 +128,4 @@ export const Navbar: React.FC<NavbarProps> = ({
     </header>
   );
 };
+

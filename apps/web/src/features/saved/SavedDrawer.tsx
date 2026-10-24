@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api, Career } from '../../lib/api';
-import { X, Bookmark, Trash2, ArrowRight, ExternalLink, RefreshCw } from 'lucide-react';
+import { X, Bookmark, Trash2, ArrowRight, RefreshCw, Compass } from 'lucide-react';
 
 interface SavedDrawerProps {
   sessionId: string;
@@ -44,38 +44,84 @@ export const SavedDrawer: React.FC<SavedDrawerProps> = ({
 
   return (
     <div className="drawer-right animate-fade-in" role="dialog" aria-modal="true">
-      <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      {/* Header */}
+      <div
+        style={{
+          padding: '20px 24px',
+          borderBottom: 'var(--border-thick) solid var(--border-ink)',
+          background: 'var(--accent-yellow)',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          boxShadow: '0 2px 0 var(--border-ink)',
+        }}
+      >
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <Bookmark className="w-5 h-5 text-teal-400" />
+          <div
+            style={{
+              width: '36px',
+              height: '36px',
+              background: '#FFFFFF',
+              border: 'var(--border-width) solid var(--border-ink)',
+              borderRadius: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '2px 2px 0px var(--border-ink)',
+            }}
+          >
+            <Bookmark className="w-5 h-5 text-ink-primary" />
+          </div>
           <div>
-            <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#ffffff' }}>Saved Career Shortlist</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{savedItems.length} bookmarked paths</div>
+            <div style={{ fontWeight: 900, fontSize: '1.15rem', color: 'var(--ink-primary)', fontFamily: 'var(--font-display)' }}>
+              Saved Shortlist
+            </div>
+            <div style={{ fontSize: '0.74rem', fontFamily: 'var(--font-mono)', color: 'var(--ink-secondary)', fontWeight: 700 }}>
+              {savedItems.length} BOOKMARKED PATHWAYS
+            </div>
           </div>
         </div>
 
         <button
           id="btn-close-saved-drawer"
           onClick={onClose}
-          style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '6px' }}
+          className="btn-brutal btn-white btn-brutal-sm"
+          style={{ padding: '6px 10px' }}
         >
-          <X className="w-5 h-5" />
+          <X className="w-5 h-5 text-ink-primary" />
         </button>
       </div>
 
-      <div style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+      {/* Body */}
+      <div style={{ flex: 1, overflowY: 'auto', padding: '24px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-faint)' }}>
-            <RefreshCw className="w-6 h-6 animate-spin text-teal-400" style={{ margin: '0 auto 8px auto' }} />
-            Loading saved shortlist...
+          <div className="brutal-card-static" style={{ textAlign: 'center', padding: '40px', background: '#FFFFFF' }}>
+            <RefreshCw className="w-7 h-7 animate-spin text-cobalt" style={{ margin: '0 auto 10px auto' }} />
+            <div style={{ fontWeight: 800 }}>Loading saved shortlist...</div>
           </div>
         ) : savedItems.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-faint)' }}>
-            <Bookmark className="w-10 h-10 text-slate-600" style={{ margin: '0 auto 12px auto' }} />
-            <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-muted)', marginBottom: '4px' }}>
-              No saved careers yet
+          <div className="brutal-card-static" style={{ textAlign: 'center', padding: '60px 20px', background: '#FFFFFF' }}>
+            <div
+              style={{
+                width: '60px',
+                height: '60px',
+                background: 'var(--accent-lime)',
+                border: 'var(--border-width) solid var(--border-ink)',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 16px auto',
+                boxShadow: 'var(--shadow-sm)',
+              }}
+            >
+              <Bookmark className="w-7 h-7 text-ink-primary" />
             </div>
-            <p style={{ fontSize: '0.82rem' }}>
-              Click the bookmark icon on any career card to save it to your exploration shortlist.
+            <div style={{ fontWeight: 900, fontSize: '1.1rem', color: 'var(--ink-primary)', marginBottom: '6px', fontFamily: 'var(--font-display)' }}>
+              No Saved Careers Yet
+            </div>
+            <p style={{ fontSize: '0.86rem', color: 'var(--ink-secondary)', maxWidth: '280px', margin: '0 auto' }}>
+              Click the bookmark icon on any career card in the catalog or results to curate your personal exploration shortlist.
             </p>
           </div>
         ) : (
@@ -86,50 +132,84 @@ export const SavedDrawer: React.FC<SavedDrawerProps> = ({
             return (
               <div
                 key={item.careerId}
-                className="glass-panel"
-                style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}
+                className="brutal-card"
+                style={{ padding: '20px', background: '#FFFFFF', display: 'flex', flexDirection: 'column', gap: '10px' }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <span className="badge badge-cluster" style={{ fontSize: '0.7rem' }}>
+                  <span className="sticker sticker-cyan" style={{ fontSize: '0.72rem' }}>
                     {career.clusterName}
                   </span>
                   <button
                     onClick={() => handleRemove(item.careerId)}
                     title="Remove from saved list"
-                    style={{ background: 'transparent', border: 'none', color: 'var(--text-faint)', cursor: 'pointer', padding: '4px' }}
+                    className="btn-brutal btn-white btn-brutal-sm"
+                    style={{ padding: '4px 8px', borderColor: '#E5E7EB' }}
                   >
-                    <Trash2 className="w-4 h-4 hover:text-rose-400" />
+                    <Trash2 className="w-3.5 h-3.5 text-rose-500" />
                   </button>
                 </div>
 
-                <div style={{ fontWeight: 700, fontSize: '1rem', color: '#ffffff' }}>
+                <div style={{ fontWeight: 900, fontSize: '1.2rem', color: 'var(--ink-primary)', fontFamily: 'var(--font-display)' }}>
                   {career.name}
                 </div>
 
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                  {career.salaryRange.entry} · Stream: {career.pathways[0]?.streamRequired.split(' ')[0]}
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', fontFamily: 'var(--font-mono)', fontSize: '0.76rem' }}>
+                  <span className="stamp">
+                    ENTRY: {career.salaryRange.entry}
+                  </span>
+                  <span className="stamp">
+                    STREAM: {career.pathways[0]?.streamRequired.split(' ')[0]}
+                  </span>
                 </div>
 
                 {item.notes && (
-                  <div style={{ fontSize: '0.78rem', background: 'rgba(255, 255, 255, 0.04)', padding: '6px 8px', borderRadius: '4px', color: 'var(--accent-teal)' }}>
+                  <div
+                    style={{
+                      fontSize: '0.82rem',
+                      background: 'var(--bg-surface-alt)',
+                      border: '1.5px dashed var(--border-ink)',
+                      padding: '8px 12px',
+                      borderRadius: '6px',
+                      color: 'var(--ink-primary)',
+                      fontStyle: 'italic',
+                    }}
+                  >
                     "{item.notes}"
                   </div>
                 )}
 
                 <button
-                  className="btn btn-primary btn-sm"
-                  style={{ marginTop: '6px' }}
+                  className="btn-brutal btn-lime btn-brutal-sm"
+                  style={{ marginTop: '8px', width: '100%' }}
                   onClick={() => {
                     onSelectCareer(career);
                     onClose();
                   }}
                 >
-                  View Educational Roadmap <ArrowRight className="w-3.5 h-3.5" />
+                  Inspect Full Roadmap <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
             );
           })
         )}
+      </div>
+
+      {/* Footer */}
+      <div
+        style={{
+          padding: '16px 24px',
+          borderTop: 'var(--border-width) solid var(--border-ink)',
+          background: 'var(--bg-surface-alt)',
+          fontFamily: 'var(--font-mono)',
+          fontSize: '0.76rem',
+          color: 'var(--ink-muted)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+        }}
+      >
+        <Compass className="w-4 h-4 text-cobalt" />
+        Saved locally in session — zero account required.
       </div>
     </div>
   );

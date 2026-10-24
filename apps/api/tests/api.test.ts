@@ -8,15 +8,23 @@ describe('Career Discovery Platform - API Integration Tests', () => {
   const baseUrl = 'http://localhost:4000/api';
 
   beforeAll(async () => {
-    server = startServer();
-    await new Promise(r => setTimeout(r, 400));
+    try {
+      const probe = await fetch(`${baseUrl}/health`).catch(() => null);
+      if (!probe || !probe.ok) {
+        server = startServer();
+        await new Promise(r => setTimeout(r, 400));
+      }
+    } catch {
+      server = startServer();
+      await new Promise(r => setTimeout(r, 400));
+    }
   });
 
   afterAll(async () => {
     if (server) {
       await new Promise<void>(resolve => server.close(() => resolve()));
+      closeDatabase();
     }
-    closeDatabase();
   });
 
   it('GET /api/health returns healthy status with Gemma configuration info', async () => {

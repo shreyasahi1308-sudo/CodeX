@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Career, AIExplanation, AIMeta, api } from '../../lib/api';
-import { X, Sparkles, BookOpen, ExternalLink, Cpu, Bookmark, CheckCircle, AlertTriangle, ShieldCheck, HelpCircle } from 'lucide-react';
+import { X, Sparkles, BookOpen, ExternalLink, Cpu, Bookmark, CheckCircle, AlertTriangle, ShieldCheck, HelpCircle, ArrowRight } from 'lucide-react';
 
 interface CareerDetailModalProps {
   career: Career;
@@ -52,16 +52,12 @@ export const CareerDetailModal: React.FC<CareerDetailModalProps> = ({
         <button
           id="btn-close-career-modal"
           onClick={onClose}
+          className="btn-brutal btn-white btn-brutal-sm"
           style={{
             position: 'absolute',
             top: '20px',
             right: '20px',
-            background: 'rgba(255, 255, 255, 0.08)',
-            border: 'none',
-            color: 'var(--text-muted)',
-            padding: '8px',
-            borderRadius: '50%',
-            cursor: 'pointer',
+            padding: '6px 8px',
           }}
         >
           <X className="w-5 h-5" />
@@ -69,19 +65,20 @@ export const CareerDetailModal: React.FC<CareerDetailModalProps> = ({
 
         {/* Modal Header */}
         <div style={{ marginBottom: '24px' }}>
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap' }}>
-            <span className="badge badge-cluster">{career.clusterName}</span>
-            <span className="badge badge-stream">{career.pathways[0]?.streamRequired.split(' ')[0]} Stream</span>
-            <span className="badge badge-strong" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <ShieldCheck className="w-3.5 h-3.5" /> Verified Profile ({career.lastVerified})
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap' }}>
+            <span className="sticker sticker-lime">{career.clusterName}</span>
+            <span className="sticker sticker-cyan">{career.pathways[0]?.streamRequired.split(' ')[0]} STREAM</span>
+            <span className="stamp">
+              <ShieldCheck className="w-3.5 h-3.5 inline mr-1 text-green-700" />
+              VERIFIED {career.lastVerified}
             </span>
           </div>
 
-          <h2 style={{ fontSize: '1.85rem', fontWeight: 800, color: '#ffffff', marginBottom: '8px' }}>
+          <h2 style={{ fontSize: '2.1rem', fontWeight: 900, textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '-0.03em' }}>
             {career.name}
           </h2>
 
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: '1.6' }}>
+          <p style={{ color: 'var(--ink-secondary)', fontSize: '1rem', lineHeight: '1.6', fontWeight: 500 }}>
             {career.summary}
           </p>
         </div>
@@ -90,56 +87,47 @@ export const CareerDetailModal: React.FC<CareerDetailModalProps> = ({
         <div style={{ display: 'flex', gap: '12px', marginBottom: '28px', flexWrap: 'wrap' }}>
           <button
             id="btn-open-gemma-mentor"
-            className="btn btn-primary"
+            className="btn-brutal btn-cobalt"
             onClick={() => onOpenMentor(career)}
           >
             <Sparkles className="w-4 h-4" />
-            Ask Gemma Mentor
+            Ask Gemma Mentor (AI)
           </button>
 
           {career.trialActivityId && onLaunchSimulation && (
             <button
               id="btn-launch-career-activity"
-              className="btn btn-secondary"
+              className="btn-brutal btn-lime"
               onClick={() => onLaunchSimulation(career.trialActivityId!)}
             >
-              <Cpu className="w-4 h-4 text-teal-400" />
-              Test-Drive Simulation
+              <Cpu className="w-4 h-4" />
+              Test-Drive Simulation (5 mins)
             </button>
           )}
 
           <button
             id="btn-bookmark-career-modal"
-            className="btn btn-secondary"
+            className={`btn-brutal ${isSaved ? 'btn-yellow' : 'btn-white'}`}
             onClick={onToggleSave}
-            style={{ color: isSaved ? '#2dd4bf' : 'var(--text-main)' }}
           >
-            <Bookmark className="w-4 h-4" />
-            {isSaved ? 'Saved to Bookmarks' : 'Save Career'}
+            <Bookmark className="w-4 h-4 fill-current" />
+            {isSaved ? 'Saved in Shortlist' : 'Save to Shortlist'}
           </button>
         </div>
 
         {/* Tabs: Roadmap vs AI Fit vs Day in Life */}
-        <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-subtle)', marginBottom: '24px' }}>
+        <div style={{ display: 'flex', gap: '10px', borderBottom: '2.5px solid var(--border-ink)', paddingBottom: '12px', marginBottom: '28px' }}>
           {[
-            { id: 'roadmap', label: 'Indian Education Roadmap' },
-            { id: 'ai_fit', label: 'Why You Fit (Gemma AI)' },
-            { id: 'day_life', label: 'Daily Life & Trade-offs' },
+            { id: 'roadmap', label: '1. INDIAN EDUCATION ROADMAP' },
+            { id: 'ai_fit', label: '2. WHY YOU FIT (GEMMA 4)' },
+            { id: 'day_life', label: '3. DAILY LIFE & REALITY CHECKS' },
           ].map(tab => (
             <button
               key={tab.id}
               id={`tab-${tab.id}`}
               onClick={() => setActiveTab(tab.id as any)}
-              style={{
-                padding: '10px 16px',
-                background: 'transparent',
-                border: 'none',
-                borderBottom: activeTab === tab.id ? '2px solid var(--primary-500)' : '2px solid transparent',
-                color: activeTab === tab.id ? '#ffffff' : 'var(--text-muted)',
-                fontWeight: 600,
-                fontSize: '0.9rem',
-                cursor: 'pointer',
-              }}
+              className={`btn-brutal ${activeTab === tab.id ? 'btn-yellow' : 'btn-white'} btn-brutal-sm`}
+              style={{ fontFamily: 'var(--font-mono)' }}
             >
               {tab.label}
             </button>
@@ -149,46 +137,49 @@ export const CareerDetailModal: React.FC<CareerDetailModalProps> = ({
         {/* TAB 1: ROADMAP */}
         {activeTab === 'roadmap' && (
           <div>
-            <div className="glass-panel" style={{ padding: '20px', marginBottom: '24px', background: 'rgba(99, 102, 241, 0.05)' }}>
-              <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--primary-400)', marginBottom: '4px' }}>
-                Class 11–12 Eligibility & Stream Requirement:
+            <div className="brutal-card card-lime" style={{ padding: '20px', marginBottom: '24px' }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '4px' }}>
+                [CLASS 11–12 STREAM ELIGIBILITY]
               </div>
-              <div style={{ fontSize: '1rem', fontWeight: 600, color: '#ffffff' }}>
+              <div style={{ fontSize: '1.15rem', fontWeight: 900 }}>
                 {career.pathways[0]?.streamRequired}
               </div>
               {career.pathways[0]?.note && (
-                <div style={{ fontSize: '0.82rem', color: 'var(--text-faint)', marginTop: '4px' }}>
-                  {career.pathways[0].note}
+                <div style={{ fontSize: '0.82rem', marginTop: '6px', fontWeight: 600 }}>
+                  * {career.pathways[0].note}
                 </div>
               )}
             </div>
 
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '16px' }}>
-              Step-by-Step Educational Timeline:
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 900, textTransform: 'uppercase', marginBottom: '16px' }}>
+              Educational Milestones Timeline:
             </h3>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '28px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '28px' }}>
               {career.pathways[0]?.steps.map((step, idx) => (
-                <div key={idx} style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+                <div key={idx} style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
                   <div
                     style={{
-                      width: '32px',
-                      height: '32px',
-                      borderRadius: '50%',
-                      background: 'var(--primary-600)',
-                      color: '#fff',
+                      width: '36px',
+                      height: '36px',
+                      borderRadius: '8px',
+                      background: 'var(--ink-primary)',
+                      color: '#ffffff',
+                      border: '2px solid var(--border-ink)',
+                      boxShadow: '2px 2px 0 var(--border-ink)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontWeight: 700,
-                      fontSize: '0.88rem',
+                      fontWeight: 900,
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '0.92rem',
                       flexShrink: 0,
                     }}
                   >
-                    {idx + 1}
+                    0{idx + 1}
                   </div>
-                  <div style={{ flex: 1, background: 'rgba(255, 255, 255, 0.03)', padding: '14px 16px', borderRadius: '8px', border: '1px solid var(--border-subtle)' }}>
-                    <div style={{ fontSize: '0.92rem', color: 'var(--text-main)', lineHeight: '1.5' }}>{step}</div>
+                  <div className="brutal-card" style={{ flex: 1, padding: '14px 18px', background: '#FFFFFF' }}>
+                    <div style={{ fontSize: '0.94rem', fontWeight: 600, lineHeight: '1.5' }}>{step}</div>
                   </div>
                 </div>
               ))}
@@ -197,33 +188,35 @@ export const CareerDetailModal: React.FC<CareerDetailModalProps> = ({
             {/* Verified Entrance Exams */}
             {career.pathways[0]?.exams && career.pathways[0].exams.length > 0 && (
               <div style={{ marginBottom: '28px' }}>
-                <h4 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '12px', color: 'var(--accent-teal)' }}>
+                <h4 style={{ fontSize: '1.1rem', fontWeight: 900, textTransform: 'uppercase', marginBottom: '14px' }}>
                   Verified National Entrance Examinations:
                 </h4>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '12px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px' }}>
                   {career.pathways[0].exams.map((exam, i) => (
                     <div
                       key={i}
+                      className="brutal-card"
                       style={{
-                        padding: '14px',
-                        borderRadius: '8px',
-                        background: 'rgba(255, 255, 255, 0.03)',
-                        border: '1px solid var(--border-subtle)',
+                        padding: '16px',
+                        background: '#FFFFFF',
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',
                       }}
                     >
                       <div>
-                        <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>{exam.name}</div>
-                        {exam.frequency && <div style={{ fontSize: '0.75rem', color: 'var(--text-faint)' }}>{exam.frequency}</div>}
+                        <div style={{ fontWeight: 800, fontSize: '0.95rem' }}>{exam.name}</div>
+                        {exam.frequency && (
+                          <div style={{ fontSize: '0.78rem', color: 'var(--ink-muted)', fontFamily: 'var(--font-mono)', marginTop: '2px' }}>
+                            {exam.frequency}
+                          </div>
+                        )}
                       </div>
                       <a
                         href={exam.officialUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="btn btn-ghost btn-sm"
-                        style={{ color: 'var(--primary-400)' }}
+                        className="btn-brutal btn-yellow btn-brutal-sm"
                       >
                         Official Site <ExternalLink className="w-3.5 h-3.5" />
                       </a>
@@ -234,26 +227,26 @@ export const CareerDetailModal: React.FC<CareerDetailModalProps> = ({
             )}
 
             {/* Compensation Benchmark */}
-            <div className="glass-panel" style={{ padding: '20px', marginBottom: '24px' }}>
-              <div style={{ fontWeight: 700, fontSize: '0.95rem', marginBottom: '10px' }}>
-                Realistic Indian Compensation Benchmarks (CTC in INR):
+            <div className="brutal-card card-yellow" style={{ padding: '24px', marginBottom: '24px' }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, fontSize: '0.78rem', textTransform: 'uppercase', marginBottom: '10px' }}>
+                [REALISTIC INDIAN COMPENSATION BENCHMARKS (INR CTC)]
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                 <div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-faint)' }}>Entry-Level (0–3 Years):</div>
-                  <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#4ade80' }}>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--ink-secondary)' }}>Entry-Level (0–3 Years):</div>
+                  <div style={{ fontSize: '1.5rem', fontWeight: 900 }}>
                     {career.salaryRange.entry}
                   </div>
                 </div>
                 <div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-faint)' }}>Mid-Level (5–8 Years):</div>
-                  <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#38bdf8' }}>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--ink-secondary)' }}>Mid-Level (5–8 Years):</div>
+                  <div style={{ fontSize: '1.5rem', fontWeight: 900 }}>
                     {career.salaryRange.mid}
                   </div>
                 </div>
               </div>
               {career.salaryRange.note && (
-                <div style={{ fontSize: '0.78rem', color: 'var(--text-faint)', marginTop: '8px' }}>
+                <div style={{ fontSize: '0.78rem', color: 'var(--ink-secondary)', marginTop: '10px', fontWeight: 600 }}>
                   * {career.salaryRange.note}
                 </div>
               )}
@@ -264,59 +257,67 @@ export const CareerDetailModal: React.FC<CareerDetailModalProps> = ({
         {/* TAB 2: AI FIT & PERSONALIZED EXPLANATION */}
         {activeTab === 'ai_fit' && (
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Sparkles className="w-4 h-4 text-amber-400" />
-                <span style={{ fontWeight: 700, fontSize: '0.95rem' }}>Personalized Fit Analysis</span>
+                <Sparkles className="w-5 h-5 text-indigo-600" />
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 900, textTransform: 'uppercase' }}>
+                  Personalized Fit Analysis
+                </h3>
               </div>
               {aiMeta && (
-                <span className="badge badge-cluster" style={{ fontSize: '0.7rem' }}>
-                  Engine: {aiMeta.model}
+                <span className="stamp">
+                  ENGINE: {aiMeta.model}
                 </span>
               )}
             </div>
 
             {loadingAI ? (
-              <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                Synthesizing verified career records and student profile...
+              <div style={{ padding: '40px', textAlign: 'center', color: 'var(--ink-secondary)', fontFamily: 'var(--font-mono)' }}>
+                Synthesizing verified career records with student profile...
               </div>
             ) : explanation ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-                <div className="glass-panel" style={{ padding: '18px', borderLeft: '4px solid var(--primary-500)' }}>
-                  <div style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '4px' }}>Fit Summary:</div>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                <div className="brutal-card card-lime" style={{ padding: '20px' }}>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, fontSize: '0.8rem', marginBottom: '6px' }}>
+                    [FIT SUMMARY]
+                  </div>
+                  <p style={{ fontSize: '0.95rem', fontWeight: 600, lineHeight: '1.6' }}>
                     {explanation.summary}
                   </p>
                 </div>
 
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '8px' }}>Key Interest Drivers:</div>
-                  <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div className="brutal-card" style={{ padding: '20px', background: '#FFFFFF' }}>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, fontSize: '0.8rem', marginBottom: '10px' }}>
+                    [KEY INTEREST DRIVERS]
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     {explanation.interest_connections.map((item, i) => (
-                      <li key={i} style={{ display: 'flex', gap: '10px', fontSize: '0.88rem', color: 'var(--text-muted)' }}>
-                        <CheckCircle className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
+                      <div key={i} style={{ display: 'flex', gap: '10px', fontSize: '0.9rem', fontWeight: 600 }}>
+                        <span className="sticker sticker-coral" style={{ padding: '2px 6px', fontSize: '0.7rem' }}>✓</span>
                         <span>{item}</span>
-                      </li>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 </div>
 
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '8px' }}>Reflective Questions to Consider:</div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div className="brutal-card" style={{ padding: '20px', background: '#FFFFFF' }}>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, fontSize: '0.8rem', marginBottom: '10px' }}>
+                    [REFLECTIVE QUESTIONS TO CONSIDER]
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     {explanation.questions_to_consider.map((q, i) => (
-                      <div key={i} style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '10px 14px', borderRadius: '8px', fontSize: '0.86rem', color: 'var(--text-muted)' }}>
+                      <div key={i} style={{ background: 'var(--bg-page)', border: '1.5px solid var(--border-ink)', padding: '12px 14px', borderRadius: '8px', fontSize: '0.88rem', fontWeight: 600 }}>
                         ❓ {q}
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="glass-panel" style={{ padding: '16px', background: 'rgba(244, 63, 94, 0.05)', borderColor: 'rgba(244, 63, 94, 0.2)' }}>
-                  <div style={{ fontWeight: 700, fontSize: '0.85rem', color: '#fb7185', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <AlertTriangle className="w-4 h-4" /> Transparency & Real Limitations:
+                <div className="brutal-card card-coral" style={{ padding: '18px' }}>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, fontSize: '0.8rem', marginBottom: '4px' }}>
+                    [TRANSPARENCY & LIMITATIONS]
                   </div>
-                  <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: '1.5' }}>
+                  <div style={{ fontSize: '0.86rem', lineHeight: '1.5' }}>
                     {explanation.limitations}
                   </div>
                 </div>
@@ -325,41 +326,41 @@ export const CareerDetailModal: React.FC<CareerDetailModalProps> = ({
           </div>
         )}
 
-        {/* TAB 3: DAILY LIFE & TRADE-OFFS */}
+        {/* TAB 3: DAILY LIFE & REALITY CHECKS */}
         {activeTab === 'day_life' && (
           <div>
-            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: '14px' }}>
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 900, textTransform: 'uppercase', marginBottom: '14px' }}>
               What You Actually Do in a Typical Day:
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '28px' }}>
               {career.dayInLife.map((item, idx) => (
-                <div key={idx} style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '14px', borderRadius: '8px', border: '1px solid var(--border-subtle)', display: 'flex', gap: '12px' }}>
-                  <span style={{ color: 'var(--primary-400)', fontWeight: 800 }}>•</span>
-                  <span style={{ fontSize: '0.9rem', color: 'var(--text-main)', lineHeight: '1.5' }}>{item}</span>
+                <div key={idx} className="brutal-card" style={{ padding: '16px', background: '#FFFFFF', display: 'flex', gap: '12px' }}>
+                  <span style={{ color: 'var(--accent-cobalt)', fontWeight: 900, fontFamily: 'var(--font-mono)' }}>0{idx + 1}.</span>
+                  <span style={{ fontSize: '0.92rem', fontWeight: 600, lineHeight: '1.5' }}>{item}</span>
                 </div>
               ))}
             </div>
 
-            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: '14px', color: '#fbbf24', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <AlertTriangle className="w-4 h-4" /> Candid Reality Checks & Uncertainties:
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 900, textTransform: 'uppercase', marginBottom: '14px', color: '#b91c1c' }}>
+              Candid Reality Checks & Uncertainties:
             </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '28px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '28px' }}>
               {career.uncertainties.map((unc, idx) => (
-                <div key={idx} style={{ background: 'rgba(245, 158, 11, 0.08)', padding: '12px 14px', borderRadius: '8px', border: '1px solid rgba(245, 158, 11, 0.25)', fontSize: '0.86rem', color: '#fef08a', lineHeight: '1.5' }}>
+                <div key={idx} className="brutal-card card-yellow" style={{ padding: '14px 18px', fontSize: '0.9rem', fontWeight: 600, lineHeight: '1.5' }}>
                   ⚠️ {unc}
                 </div>
               ))}
             </div>
 
             {/* Official Source Attributions */}
-            <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '20px' }}>
-              <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-faint)', marginBottom: '8px' }}>
-                Verified Official Reference Sources:
+            <div style={{ borderTop: '2px solid var(--border-ink)', paddingTop: '20px' }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', fontWeight: 800, color: 'var(--ink-muted)', marginBottom: '8px', textTransform: 'uppercase' }}>
+                [VERIFIED OFFICIAL REFERENCE SOURCES]
               </div>
               {career.sources.map((src, i) => (
-                <div key={i} style={{ fontSize: '0.82rem', marginBottom: '6px' }}>
-                  <a href={src.url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary-400)', textDecoration: 'none' }}>
-                    {src.title} ({src.publisher}) <ExternalLink className="w-3 h-3 inline" />
+                <div key={i} style={{ fontSize: '0.85rem', marginBottom: '6px' }}>
+                  <a href={src.url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-cobalt)', fontWeight: 700, textDecoration: 'none' }}>
+                    {src.title} ({src.publisher}) <ExternalLink className="w-3.5 h-3.5 inline" />
                   </a>
                 </div>
               ))}

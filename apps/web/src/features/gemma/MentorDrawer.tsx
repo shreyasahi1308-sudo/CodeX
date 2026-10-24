@@ -17,7 +17,7 @@ export const MentorDrawer: React.FC<MentorDrawerProps> = ({ career, onClose }) =
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: `Hi! I'm Gemma, your career mentor for ${career.name}. Ask me anything about Class 11-12 stream choices, verified entrance exams, day-to-day work reality, or industry trade-offs!`,
+      content: `Hi! I'm Gemma, your career counselor for ${career.name}. Ask me anything about Class 11-12 stream combinations, verified national entrance tests, typical work days, or reality checks!`,
       model: 'google/gemma-4-31B-it:novita',
     },
   ]);
@@ -57,7 +57,7 @@ export const MentorDrawer: React.FC<MentorDrawerProps> = ({ career, onClose }) =
         ...prev,
         {
           role: 'assistant',
-          content: `Regarding ${career.name}: Recommended stream is ${career.pathways[0]?.streamRequired}. Verified exams include ${career.pathways.flatMap(p => p.exams?.map(e => e.name) || []).join(', ') || 'Direct merit'}.`,
+          content: `Regarding ${career.name}: Recommended Class 11-12 stream is ${career.pathways[0]?.streamRequired}. Verified exams include ${career.pathways.flatMap(p => p.exams?.map(e => e.name) || []).join(', ') || 'Direct institute merit'}.`,
         },
       ]);
     } finally {
@@ -68,21 +68,45 @@ export const MentorDrawer: React.FC<MentorDrawerProps> = ({ career, onClose }) =
   return (
     <div className="drawer-right animate-fade-in" role="dialog" aria-modal="true">
       {/* Header */}
-      <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div
+        style={{
+          padding: '20px 24px',
+          background: 'var(--accent-yellow)',
+          borderBottom: 'var(--border-thick) solid var(--border-ink)',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'linear-gradient(135deg, #6366f1, #ec4899)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Sparkles className="w-5 h-5 text-white" />
+          <div
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '8px',
+              background: '#FFFFFF',
+              border: '2px solid var(--border-ink)',
+              boxShadow: '2px 2px 0 var(--border-ink)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Sparkles className="w-5 h-5 text-indigo-600" />
           </div>
           <div>
-            <div style={{ fontWeight: 800, fontSize: '1rem', color: '#ffffff' }}>Gemma Mentor</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Focus: {career.name}</div>
+            <div style={{ fontWeight: 900, fontSize: '1.05rem', textTransform: 'uppercase' }}>Gemma AI Mentor</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.74rem', color: 'var(--ink-secondary)', fontWeight: 700 }}>
+              FOCUS: {career.name}
+            </div>
           </div>
         </div>
 
         <button
           id="btn-close-mentor-drawer"
           onClick={onClose}
-          style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '6px' }}
+          className="btn-brutal btn-white btn-brutal-sm"
+          style={{ padding: '6px 8px' }}
         >
           <X className="w-5 h-5" />
         </button>
@@ -100,37 +124,65 @@ export const MentorDrawer: React.FC<MentorDrawerProps> = ({ career, onClose }) =
                 gap: '10px',
                 alignItems: 'flex-start',
                 alignSelf: isUser ? 'flex-end' : 'flex-start',
-                maxWidth: '88%',
+                maxWidth: '90%',
               }}
             >
               {!isUser && (
-                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--primary-600)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
-                  <Sparkles className="w-3.5 h-3.5 text-white" />
+                <div
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '6px',
+                    background: 'var(--accent-lime)',
+                    border: '2px solid var(--border-ink)',
+                    boxShadow: '2px 2px 0 var(--border-ink)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                    marginTop: '2px',
+                  }}
+                >
+                  <Sparkles className="w-4 h-4 text-black" />
                 </div>
               )}
 
               <div
+                className="brutal-card"
                 style={{
-                  background: isUser ? 'var(--primary-600)' : 'rgba(255, 255, 255, 0.05)',
-                  color: isUser ? '#ffffff' : 'var(--text-main)',
-                  padding: '12px 16px',
-                  borderRadius: isUser ? '14px 14px 2px 14px' : '14px 14px 14px 2px',
-                  border: isUser ? 'none' : '1px solid var(--border-subtle)',
-                  fontSize: '0.88rem',
+                  background: isUser ? 'var(--accent-cobalt)' : '#FFFFFF',
+                  color: isUser ? '#FFFFFF' : 'var(--ink-primary)',
+                  padding: '14px 16px',
+                  fontSize: '0.9rem',
                   lineHeight: 1.5,
+                  fontWeight: 500,
                 }}
               >
                 {m.content}
                 {!isUser && m.model && (
-                  <div style={{ fontSize: '0.68rem', color: 'var(--text-faint)', marginTop: '6px', textAlign: 'right' }}>
-                    {m.model.includes('gemma') ? 'Gemma 4 (31B-it)' : 'Deterministic Mentor'}
+                  <div style={{ fontSize: '0.68rem', fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--ink-muted)', marginTop: '8px', textAlign: 'right' }}>
+                    [{m.model.includes('gemma') ? 'GEMMA 4 31B-IT' : 'DETERMINISTIC MENTOR'}]
                   </div>
                 )}
               </div>
 
               {isUser && (
-                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(255, 255, 255, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
-                  <User className="w-3.5 h-3.5 text-white" />
+                <div
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '6px',
+                    background: 'var(--accent-yellow)',
+                    border: '2px solid var(--border-ink)',
+                    boxShadow: '2px 2px 0 var(--border-ink)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                    marginTop: '2px',
+                  }}
+                >
+                  <User className="w-4 h-4 text-black" />
                 </div>
               )}
             </div>
@@ -138,25 +190,23 @@ export const MentorDrawer: React.FC<MentorDrawerProps> = ({ career, onClose }) =
         })}
 
         {loading && (
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center', color: 'var(--text-faint)', fontSize: '0.82rem', paddingLeft: '38px' }}>
-            <RefreshCw className="w-3.5 h-3.5 animate-spin text-indigo-400" />
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center', color: 'var(--ink-secondary)', fontSize: '0.82rem', fontFamily: 'var(--font-mono)', paddingLeft: '42px' }}>
+            <RefreshCw className="w-4 h-4 animate-spin text-black" />
             Gemma is reasoning with verified career records...
           </div>
         )}
       </div>
 
       {/* Quick Prompts */}
-      <div style={{ padding: '0 20px 12px 20px', display: 'flex', gap: '6px', overflowX: 'auto' }}>
+      <div style={{ padding: '0 20px 12px 20px', display: 'flex', gap: '8px', overflowX: 'auto' }}>
         {quickPrompts.map((chip, i) => (
           <button
             key={i}
-            className="btn btn-ghost btn-sm"
+            className="btn-brutal btn-white btn-brutal-sm"
             style={{
-              fontSize: '0.75rem',
-              background: 'rgba(255, 255, 255, 0.04)',
-              border: '1px solid var(--border-subtle)',
+              fontSize: '0.74rem',
               whiteSpace: 'nowrap',
-              borderRadius: '16px',
+              fontFamily: 'var(--font-mono)',
             }}
             onClick={() => handleSend(chip)}
           >
@@ -166,13 +216,13 @@ export const MentorDrawer: React.FC<MentorDrawerProps> = ({ career, onClose }) =
       </div>
 
       {/* Input Box */}
-      <div style={{ padding: '16px 20px', borderTop: '1px solid var(--border-subtle)', background: 'rgba(9, 13, 22, 0.8)' }}>
+      <div style={{ padding: '16px 20px', borderTop: 'var(--border-width) solid var(--border-ink)', background: '#FFFFFF' }}>
         <form
           onSubmit={e => {
             e.preventDefault();
             handleSend();
           }}
-          style={{ display: 'flex', gap: '8px' }}
+          style={{ display: 'flex', gap: '10px' }}
         >
           <input
             id="input-mentor-chat"
@@ -182,21 +232,22 @@ export const MentorDrawer: React.FC<MentorDrawerProps> = ({ career, onClose }) =
             placeholder={`Ask Gemma about ${career.name}...`}
             style={{
               flex: 1,
-              background: 'rgba(255, 255, 255, 0.06)',
-              border: '1px solid var(--border-subtle)',
-              borderRadius: '8px',
+              background: 'var(--bg-page)',
+              border: '2px solid var(--border-ink)',
+              borderRadius: '6px',
               padding: '10px 14px',
-              color: '#ffffff',
-              fontSize: '0.88rem',
+              color: 'var(--ink-primary)',
+              fontSize: '0.9rem',
+              fontWeight: 600,
               outline: 'none',
             }}
           />
           <button
             id="btn-send-mentor-chat"
             type="submit"
-            className="btn btn-primary"
+            className="btn-brutal btn-lime btn-brutal-sm"
             disabled={!input.trim() || loading}
-            style={{ padding: '10px 14px' }}
+            style={{ padding: '10px 16px' }}
           >
             <Send className="w-4 h-4" />
           </button>

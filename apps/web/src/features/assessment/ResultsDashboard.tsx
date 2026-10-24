@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { RecommendationResponse, ScoredCareer, Career } from '../../lib/api';
-import { Sparkles, Layers, BookOpen, Bookmark, Cpu, ArrowRight, RotateCcw, AlertCircle, Check } from 'lucide-react';
+import { Sparkles, Layers, BookOpen, Bookmark, Cpu, ArrowRight, RotateCcw, AlertTriangle, Check, ShieldCheck, Zap } from 'lucide-react';
 
 interface ResultsDashboardProps {
   results: RecommendationResponse;
@@ -13,12 +13,12 @@ interface ResultsDashboardProps {
 }
 
 const RIASEC_META = {
-  R: { name: 'Realistic', label: 'Hands-On & Physical', color: '#f97316' },
-  I: { name: 'Investigative', label: 'Scientific & Research', color: '#06b6d4' },
-  A: { name: 'Artistic', label: 'Creative & Visual', color: '#ec4899' },
-  S: { name: 'Social', label: 'Helping & Teaching', color: '#10b981' },
-  E: { name: 'Enterprising', label: 'Leading & Business', color: '#f59e0b' },
-  C: { name: 'Conventional', label: 'Organizing & Systems', color: '#8b5cf6' },
+  R: { name: 'Realistic', label: 'Hands-On & Physical', color: 'var(--accent-coral)' },
+  I: { name: 'Investigative', label: 'Scientific & Research', color: 'var(--accent-cobalt)' },
+  A: { name: 'Artistic', label: 'Creative & Visual', color: 'var(--accent-purple)' },
+  S: { name: 'Social', label: 'Helping & Teaching', color: '#16a34a' },
+  E: { name: 'Enterprising', label: 'Leading & Business', color: '#d97706' },
+  C: { name: 'Conventional', label: 'Organizing & Systems', color: 'var(--accent-cyan)' },
 };
 
 export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
@@ -56,18 +56,30 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
   const filteredStretch = filterMatches(results.stretchRecommendations);
 
   return (
-    <div className="container animate-fade-in" style={{ padding: '40px 0 80px 0' }}>
-      {/* Top Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
+    <div className="container animate-fade-in" style={{ padding: '30px 0 80px 0' }}>
+      {/* Top Header & Fast Controls */}
+      <div
+        className="brutal-card card-lime"
+        style={{
+          padding: '28px 32px',
+          marginBottom: '28px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '16px',
+        }}
+      >
         <div>
-          <span className="badge badge-strong" style={{ marginBottom: '8px' }}>
-            Personalized Discovery Matrix
-          </span>
-          <h1 style={{ fontSize: '2rem', fontWeight: 800, letterSpacing: '-0.02em' }}>
-            Your Recommended Career Explorations
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '8px' }}>
+            <span className="sticker sticker-coral">RECOMMENDATION MATRIX</span>
+            <span className="stamp">DETERMINISTIC RIASEC v1.0</span>
+          </div>
+          <h1 style={{ fontSize: '2.2rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '-0.03em' }}>
+            Your Tailored Career Shortlist
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginTop: '4px' }}>
-            Grounded in your Holland RIASEC scores, academic interests, and preferred work environments.
+          <p style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--ink-primary)', marginTop: '4px' }}>
+            Ranked by similarity with your real activity ratings, favored subjects, and chosen work settings.
           </p>
         </div>
 
@@ -75,49 +87,52 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
           {selectedForCompare.length >= 2 && (
             <button
               id="btn-compare-selected"
-              className="btn btn-primary btn-sm"
+              className="btn-brutal btn-cobalt"
               onClick={() => onCompare(selectedForCompare)}
             >
-              <Layers className="w-4 h-4" /> Compare ({selectedForCompare.length})
+              <Layers className="w-4 h-4" /> Compare Shortlist ({selectedForCompare.length})
             </button>
           )}
 
-          <button id="btn-retake-quiz" className="btn btn-secondary btn-sm" onClick={onRetake}>
-            <RotateCcw className="w-3.5 h-3.5" /> Retake Quiz
+          <button id="btn-retake-quiz" className="btn-brutal btn-white" onClick={onRetake}>
+            <RotateCcw className="w-4 h-4" /> Retake Quiz
           </button>
         </div>
       </div>
 
-      {/* Profile Health / Flags Banner */}
+      {/* Flat Profile Warning Banner */}
       {results.flags.flatProfile && (
         <div
+          className="brutal-card card-yellow"
           style={{
-            background: 'rgba(245, 158, 11, 0.1)',
-            border: '1px solid rgba(245, 158, 11, 0.3)',
-            borderRadius: '10px',
-            padding: '14px 18px',
-            marginBottom: '24px',
+            padding: '16px 20px',
+            marginBottom: '28px',
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
-            color: '#fbbf24',
-            fontSize: '0.88rem',
+            fontWeight: 600,
+            fontSize: '0.9rem',
           }}
         >
-          <AlertCircle className="w-5 h-5 shrink-0" />
+          <AlertTriangle className="w-5 h-5 text-black shrink-0" />
           <div>
-            <strong>Balanced / Flat Profile Detected:</strong> You gave similar ratings across several activity types. We have included diverse options and recommend testing real tasks in the Simulations section to discover sharper preferences!
+            <strong>BALANCED PROFILE DETECTED:</strong> You gave similar ratings across several areas. We have surfaced diverse stretch recommendations so you can test real tasks in the Simulations lab!
           </div>
         </div>
       )}
 
-      {/* Section 1: RIASEC Interest Profile Card */}
-      <div className="glass-panel" style={{ padding: '24px', marginBottom: '36px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+      {/* Section 1: RIASEC Bento Scorecard */}
+      <div className="brutal-card" style={{ padding: '28px', background: '#FFFFFF', marginBottom: '36px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', flexWrap: 'wrap', gap: '10px' }}>
           <div>
-            <h2 style={{ fontSize: '1.15rem', fontWeight: 700 }}>Your Holland RIASEC Interest Profile</h2>
-            <div style={{ fontSize: '0.82rem', color: 'var(--text-faint)' }}>Normalized from 0% (Low) to 100% (High Affinity)</div>
+            <span className="sticker sticker-cyan" style={{ marginBottom: '6px' }}>HOLLAND INVENTORY</span>
+            <h2 style={{ fontSize: '1.35rem', fontWeight: 900, textTransform: 'uppercase' }}>
+              Your 6-Dimensional RIASEC Affinity Profile
+            </h2>
           </div>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', color: 'var(--ink-muted)' }}>
+            [RANGE: 0% LOW TO 100% HIGH ENJOYMENT]
+          </span>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '14px' }}>
@@ -129,18 +144,23 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
               <div
                 key={dim}
                 style={{
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  padding: '12px 14px',
+                  background: 'var(--bg-page)',
+                  border: '2px solid var(--border-ink)',
                   borderRadius: '10px',
-                  border: '1px solid var(--border-subtle)',
+                  padding: '14px',
+                  boxShadow: '2px 2px 0 var(--border-ink)',
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                  <span style={{ fontWeight: 700, fontSize: '0.85rem', color: meta.color }}>{meta.name}</span>
-                  <span style={{ fontWeight: 800, fontSize: '0.85rem' }}>{pct}%</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                  <span style={{ fontWeight: 800, fontSize: '0.92rem' }}>{meta.name}</span>
+                  <span className="sticker sticker-lime" style={{ fontSize: '0.7rem', padding: '2px 6px' }}>
+                    {pct}%
+                  </span>
                 </div>
-                <div style={{ fontSize: '0.74rem', color: 'var(--text-faint)', marginBottom: '8px' }}>{meta.label}</div>
-                <div style={{ width: '100%', height: '4px', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '2px', overflow: 'hidden' }}>
+                <div style={{ fontSize: '0.74rem', color: 'var(--ink-muted)', marginBottom: '10px', fontWeight: 500 }}>
+                  {meta.label}
+                </div>
+                <div style={{ width: '100%', height: '8px', background: '#E5E2D6', border: '1.5px solid var(--border-ink)', borderRadius: '4px', overflow: 'hidden' }}>
                   <div style={{ width: `${pct}%`, height: '100%', background: meta.color }} />
                 </div>
               </div>
@@ -150,152 +170,155 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
       </div>
 
       {/* Stream Filter Pills */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '28px', overflowX: 'auto', paddingBottom: '4px' }}>
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '28px', overflowX: 'auto', paddingBottom: '6px' }}>
         {[
-          { id: 'all', label: 'All Streams' },
-          { id: 'pcm', label: 'Science (PCM)' },
-          { id: 'pcb', label: 'Science (PCB)' },
-          { id: 'commerce', label: 'Commerce' },
-          { id: 'humanities', label: 'Humanities & Arts' },
-          { id: 'design', label: 'Design & Tech' },
+          { id: 'all', label: '★ ALL STREAMS' },
+          { id: 'pcm', label: 'SCIENCE (PCM)' },
+          { id: 'pcb', label: 'SCIENCE (PCB)' },
+          { id: 'commerce', label: 'COMMERCE' },
+          { id: 'humanities', label: 'HUMANITIES & ARTS' },
+          { id: 'design', label: 'DESIGN & TECH' },
         ].map(filter => (
           <button
             key={filter.id}
             id={`filter-stream-${filter.id}`}
             onClick={() => setStreamFilter(filter.id)}
-            style={{
-              padding: '6px 14px',
-              borderRadius: '20px',
-              fontSize: '0.82rem',
-              fontWeight: 600,
-              cursor: 'pointer',
-              border: streamFilter === filter.id ? '1px solid var(--primary-400)' : '1px solid var(--border-subtle)',
-              background: streamFilter === filter.id ? 'var(--primary-600)' : 'rgba(255, 255, 255, 0.05)',
-              color: streamFilter === filter.id ? '#ffffff' : 'var(--text-muted)',
-              transition: 'all 0.15s',
-              whiteSpace: 'nowrap',
-            }}
+            className={`btn-brutal ${streamFilter === filter.id ? 'btn-cobalt' : 'btn-white'} btn-brutal-sm`}
+            style={{ whiteSpace: 'nowrap', fontFamily: 'var(--font-mono)' }}
           >
             {filter.label}
           </button>
         ))}
       </div>
 
-      {/* Section 2: Main Recommended Careers */}
-      <div style={{ marginBottom: '48px' }}>
-        <h2 style={{ fontSize: '1.35rem', fontWeight: 800, marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Sparkles className="w-5 h-5 text-indigo-400" />
-          Primary Matches ({filteredMain.length})
-        </h2>
+      {/* Section 2: Primary Recommended Careers */}
+      <div style={{ marginBottom: '50px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
+          <span className="sticker sticker-coral">TOP MATCHES</span>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 900, textTransform: 'uppercase' }}>
+            Primary Career Recommendations ({filteredMain.length})
+          </h2>
+        </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px' }}>
-          {filteredMain.map(rec => {
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '24px' }}>
+          {filteredMain.map((rec, index) => {
             const isSaved = isCareerSaved(rec.career.id);
             const isSelected = selectedForCompare.includes(rec.career.id);
 
             return (
               <div
                 key={rec.career.id}
-                className="glass-panel"
                 id={`card-career-${rec.career.id}`}
+                className="brutal-card"
                 style={{
-                  padding: '24px',
+                  padding: '26px',
+                  background: '#FFFFFF',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  border: isSelected ? '1px solid var(--accent-teal)' : '1px solid var(--border-subtle)',
-                  transition: 'transform 0.2s, border-color 0.2s',
+                  borderWidth: '3px',
                 }}
               >
                 <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-                    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                      <span className={`badge ${rec.band === 'Strong overlap' ? 'badge-strong' : 'badge-good'}`}>
-                        {rec.scorePercent}% Match · {rec.band}
+                  {/* Card Header */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px' }}>
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                      <span className="sticker sticker-lime">
+                        #{index + 1} · {rec.scorePercent}% MATCH
                       </span>
-                      <span className="badge badge-cluster">{rec.career.clusterName}</span>
+                      <span className="stamp">
+                        {rec.band}
+                      </span>
                     </div>
 
                     <button
                       id={`btn-save-${rec.career.id}`}
                       onClick={() => onSaveCareer(rec.career.id)}
+                      className={`btn-brutal ${isSaved ? 'btn-lime' : 'btn-white'} btn-brutal-sm`}
                       title={isSaved ? 'Saved to bookmarks' : 'Save this career'}
-                      style={{
-                        background: isSaved ? 'rgba(20, 184, 166, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-                        border: isSaved ? '1px solid var(--accent-teal)' : '1px solid transparent',
-                        color: isSaved ? '#2dd4bf' : 'var(--text-muted)',
-                        padding: '6px',
-                        borderRadius: '6px',
-                        cursor: 'pointer',
-                      }}
+                      style={{ padding: '6px 10px' }}
                     >
-                      <Bookmark className="w-4 h-4" />
+                      <Bookmark className="w-4 h-4 fill-current" />
                     </button>
                   </div>
 
-                  <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '8px', color: '#ffffff' }}>
+                  <h3 style={{ fontSize: '1.35rem', fontWeight: 900, textTransform: 'uppercase', marginBottom: '8px' }}>
                     {rec.career.name}
                   </h3>
 
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', lineHeight: '1.5', marginBottom: '16px' }}>
+                  <p style={{ color: 'var(--ink-secondary)', fontSize: '0.9rem', lineHeight: '1.5', marginBottom: '18px', fontWeight: 500 }}>
                     {rec.career.summary}
                   </p>
 
-                  {/* Why recommended reasons */}
-                  <div style={{ marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-faint)', textTransform: 'uppercase' }}>
-                      Why Recommended:
+                  {/* Why Recommended Reasons */}
+                  <div style={{ marginBottom: '18px' }}>
+                    <div style={{ fontSize: '0.74rem', fontFamily: 'var(--font-mono)', fontWeight: 800, color: 'var(--ink-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>
+                      [WHY RECOMMENDED FOR YOU]
                     </div>
-                    {rec.reasons.slice(0, 2).map((r, i) => (
-                      <div
-                        key={i}
-                        style={{
-                          fontSize: '0.8rem',
-                          color: 'var(--text-muted)',
-                          background: 'rgba(255, 255, 255, 0.03)',
-                          padding: '6px 10px',
-                          borderRadius: '6px',
-                          borderLeft: '3px solid var(--primary-500)',
-                        }}
-                      >
-                        <strong>{r.label}:</strong> {r.detail}
-                      </div>
-                    ))}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                      {rec.reasons.slice(0, 2).map((r, i) => (
+                        <div
+                          key={i}
+                          style={{
+                            fontSize: '0.82rem',
+                            background: 'var(--bg-page)',
+                            border: '1.5px solid var(--border-ink)',
+                            padding: '6px 10px',
+                            borderRadius: '6px',
+                            fontWeight: 600,
+                          }}
+                        >
+                          <strong style={{ color: 'var(--accent-cobalt)' }}>{r.label}:</strong> {r.detail}
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
-                  {/* Indian Salary Benchmark */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 12px', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '8px', fontSize: '0.8rem', marginBottom: '16px' }}>
+                  {/* Indian Compensation Benchmark */}
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 1fr',
+                      gap: '8px',
+                      background: 'var(--accent-yellow)',
+                      border: '2px solid var(--border-ink)',
+                      borderRadius: '8px',
+                      padding: '10px 14px',
+                      marginBottom: '18px',
+                    }}
+                  >
                     <div>
-                      <span style={{ color: 'var(--text-faint)' }}>Starter: </span>
-                      <strong style={{ color: '#4ade80' }}>{rec.career.salaryRange.entry}</strong>
+                      <div style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', fontWeight: 800 }}>STARTER CTC</div>
+                      <div style={{ fontSize: '1.05rem', fontWeight: 900 }}>{rec.career.salaryRange.entry}</div>
                     </div>
                     <div>
-                      <span style={{ color: 'var(--text-faint)' }}>Mid-Career: </span>
-                      <strong style={{ color: '#38bdf8' }}>{rec.career.salaryRange.mid}</strong>
+                      <div style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', fontWeight: 800 }}>MID-CAREER</div>
+                      <div style={{ fontSize: '1.05rem', fontWeight: 900 }}>{rec.career.salaryRange.mid}</div>
                     </div>
                   </div>
                 </div>
 
-                <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  <div style={{ display: 'flex', gap: '8px' }}>
+                {/* Card Action Controls */}
+                <div style={{ borderTop: '2px solid var(--border-ink)', paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <div style={{ display: 'flex', gap: '10px' }}>
                     <button
                       id={`btn-view-${rec.career.id}`}
-                      className="btn btn-primary btn-sm"
+                      className="btn-brutal btn-cobalt btn-brutal-sm"
                       style={{ flex: 1 }}
                       onClick={() => onSelectCareer(rec.career, rec.scorePercent)}
                     >
-                      <BookOpen className="w-3.5 h-3.5" />
+                      <BookOpen className="w-4 h-4" />
                       Roadmap & Details
                     </button>
 
                     {rec.career.trialActivityId && (
                       <button
                         id={`btn-trial-${rec.career.id}`}
-                        className="btn btn-secondary btn-sm"
+                        className="btn-brutal btn-lime btn-brutal-sm"
                         onClick={() => onLaunchSimulation(rec.career.trialActivityId!)}
                         title="Try a 5-minute interactive task from this career"
                       >
-                        <Cpu className="w-3.5 h-3.5 text-teal-400" />
+                        <Cpu className="w-4 h-4" />
                         Try Activity
                       </button>
                     )}
@@ -309,20 +332,22 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
                       style={{
                         background: 'transparent',
                         border: 'none',
-                        color: isSelected ? 'var(--accent-teal)' : 'var(--text-faint)',
+                        color: isSelected ? 'var(--accent-cobalt)' : 'var(--ink-muted)',
                         fontSize: '0.78rem',
+                        fontFamily: 'var(--font-mono)',
+                        fontWeight: 700,
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '4px',
                       }}
                     >
-                      <Layers className="w-3 h-3" />
-                      {isSelected ? 'Selected for comparison' : '+ Add to compare'}
+                      <Layers className="w-3.5 h-3.5" />
+                      {isSelected ? '✓ SELECTED FOR COMPARE' : '+ ADD TO COMPARE'}
                     </button>
 
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-faint)' }}>
-                      Class 11: {rec.career.pathways[0]?.streamRequired.split(' ')[0] || 'Any'}
+                    <span className="stamp" style={{ fontSize: '0.68rem' }}>
+                      {rec.career.pathways[0]?.streamRequired.split(' ')[0]}
                     </span>
                   </div>
                 </div>
@@ -334,50 +359,53 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
 
       {/* Section 3: Stretch Recommendations */}
       {filteredStretch.length > 0 && (
-        <div style={{ marginTop: '40px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-            <span className="badge badge-stretch">Explore Outside Your Box</span>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>High enjoyment potential in unfamiliar clusters</span>
+        <div style={{ marginTop: '50px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+            <span className="sticker sticker-purple">EXPLORE BEYOND THE FAMILIAR</span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: 'var(--ink-muted)' }}>
+              High enjoyment potential in unfamiliar clusters
+            </span>
           </div>
-          <h2 style={{ fontSize: '1.35rem', fontWeight: 800, marginBottom: '20px' }}>
+
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 900, textTransform: 'uppercase', marginBottom: '20px' }}>
             Stretch Recommendations
           </h2>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '24px' }}>
             {filteredStretch.map(rec => (
               <div
                 key={rec.career.id}
-                className="glass-panel"
+                className="brutal-card card-yellow"
                 style={{
-                  padding: '24px',
+                  padding: '26px',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  border: '1px solid rgba(245, 158, 11, 0.3)',
-                  background: 'rgba(245, 158, 11, 0.03)',
                 }}
               >
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-                    <span className="badge badge-stretch">{rec.scorePercent}% Match · Stretch Discovery</span>
-                    <span className="badge badge-cluster">{rec.career.clusterName}</span>
+                    <span className="sticker sticker-coral">{rec.scorePercent}% MATCH · STRETCH</span>
+                    <span className="stamp">{rec.career.clusterName}</span>
                   </div>
-                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '8px', color: '#ffffff' }}>
+
+                  <h3 style={{ fontSize: '1.3rem', fontWeight: 900, textTransform: 'uppercase', marginBottom: '8px' }}>
                     {rec.career.name}
                   </h3>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.86rem', lineHeight: '1.5', marginBottom: '14px' }}>
+
+                  <p style={{ fontSize: '0.88rem', color: 'var(--ink-primary)', lineHeight: '1.5', marginBottom: '16px', fontWeight: 500 }}>
                     {rec.career.summary}
                   </p>
                 </div>
 
-                <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ borderTop: '2px solid var(--border-ink)', paddingTop: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <button
-                    className="btn btn-secondary btn-sm"
+                    className="btn-brutal btn-white btn-brutal-sm"
                     onClick={() => onSelectCareer(rec.career, rec.scorePercent)}
                   >
-                    Explore Pathway <ArrowRight className="w-3.5 h-3.5" />
+                    Explore Pathway <ArrowRight className="w-4 h-4" />
                   </button>
-                  <span style={{ fontSize: '0.78rem', color: 'var(--text-faint)' }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', fontWeight: 800 }}>
                     {rec.career.salaryRange.entry}
                   </span>
                 </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TryActivity, api } from '../../lib/api';
-import { X, Check, ArrowUp, ArrowDown, Sparkles, CheckCircle, AlertCircle, RefreshCw, Cpu, HelpCircle } from 'lucide-react';
+import { X, Check, ArrowUp, ArrowDown, Sparkles, CheckCircle, AlertCircle, RefreshCw, Cpu, HelpCircle, ArrowRight } from 'lucide-react';
 
 interface ActivityRunnerModalProps {
   activityId: string;
@@ -70,17 +70,17 @@ export const ActivityRunnerModal: React.FC<ActivityRunnerModalProps> = ({
       const correctFlaws = ['flaw-1', 'flaw-2', 'flaw-4'];
       const correctCount = selectedFlaws.filter(f => correctFlaws.includes(f)).length;
       if (correctCount < 2) {
-        setTaskFeedback('Almost! Review the ticket screen: look at where the important QR code and the tiny validity date are located.');
+        setTaskFeedback('Almost! Notice where the important QR code and the tiny validity text are located.');
         return;
       }
-      setTaskFeedback('Great eye! You caught the critical usability bottlenecks. Now let’s reflect on what this reveals about your working style.');
+      setTaskFeedback('Great eye! You identified the critical usability bottlenecks. Now let’s reflect on what you enjoyed.');
       setTimeout(() => setStage('reflection'), 1200);
     } else if (activity?.type === 'canteen_detective') {
       if (selectedHypothesis !== 'hyp-2') {
-        setTaskFeedback('Check the temperature column: notice what happens when temperatures exceed 36°C!');
+        setTaskFeedback('Look closely at the temperature column: compare sales on days above 36°C!');
         return;
       }
-      setTaskFeedback('Brilliant correlation detection! Data shows temperature drives fruit bowl sales, completely disproving the manager’s hunch.');
+      setTaskFeedback('Spot on! You detected that weather temperature drives fruit bowl sales, disproving the manager’s assumption.');
       setTimeout(() => setStage('reflection'), 1200);
     } else {
       setStage('reflection');
@@ -117,8 +117,8 @@ export const ActivityRunnerModal: React.FC<ActivityRunnerModalProps> = ({
     return (
       <div className="modal-overlay">
         <div className="modal-content" style={{ padding: '40px', textAlign: 'center' }}>
-          <RefreshCw className="w-8 h-8 text-indigo-400 animate-spin" style={{ margin: '0 auto 16px auto' }} />
-          <p style={{ color: 'var(--text-muted)' }}>Loading interactive challenge...</p>
+          <RefreshCw className="w-8 h-8 text-black animate-spin" style={{ margin: '0 auto 16px auto' }} />
+          <p style={{ fontFamily: 'var(--font-mono)' }}>LOADING MICRO-CHALLENGE...</p>
         </div>
       </div>
     );
@@ -126,39 +126,33 @@ export const ActivityRunnerModal: React.FC<ActivityRunnerModalProps> = ({
 
   return (
     <div className="modal-overlay" role="dialog" aria-modal="true">
-      <div className="modal-content animate-fade-in" style={{ padding: '36px', maxWidth: '820px' }}>
+      <div className="modal-content animate-fade-in" style={{ padding: '36px', maxWidth: '840px' }}>
         <button
           id="btn-close-activity-modal"
           onClick={onClose}
+          className="btn-brutal btn-white btn-brutal-sm"
           style={{
             position: 'absolute',
             top: '20px',
             right: '20px',
-            background: 'rgba(255, 255, 255, 0.08)',
-            border: 'none',
-            color: 'var(--text-muted)',
-            padding: '8px',
-            borderRadius: '50%',
-            cursor: 'pointer',
+            padding: '6px 8px',
           }}
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Modal Header */}
-        <div style={{ marginBottom: '20px' }}>
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-            <span className="badge badge-cluster">{activity.area}</span>
-            <span className="badge badge-strong">
-              <Cpu className="w-3.5 h-3.5" /> 5–8 Minute Micro-Challenge
-            </span>
+        <div style={{ marginBottom: '24px' }}>
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
+            <span className="sticker sticker-lime">{activity.area}</span>
+            <span className="stamp">5–8 MINUTE TRIAL</span>
           </div>
 
-          <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#ffffff', marginBottom: '8px' }}>
+          <h2 style={{ fontSize: '1.9rem', fontWeight: 900, textTransform: 'uppercase', marginBottom: '8px' }}>
             {activity.title}
           </h2>
 
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', lineHeight: '1.6' }}>
+          <p style={{ color: 'var(--ink-secondary)', fontSize: '0.95rem', lineHeight: '1.6', fontWeight: 500 }}>
             {activity.scenario}
           </p>
         </div>
@@ -167,28 +161,26 @@ export const ActivityRunnerModal: React.FC<ActivityRunnerModalProps> = ({
         {stage === 'task' && (
           <div>
             <div
+              className="brutal-card card-yellow"
               style={{
-                background: 'rgba(99, 102, 241, 0.08)',
-                border: '1px solid rgba(99, 102, 241, 0.2)',
-                borderRadius: '8px',
-                padding: '12px 16px',
-                marginBottom: '20px',
-                fontSize: '0.88rem',
-                color: 'var(--text-main)',
+                padding: '14px 18px',
+                marginBottom: '24px',
+                fontSize: '0.9rem',
+                fontWeight: 600,
               }}
             >
-              <strong>Your Mission:</strong> {activity.instructions}
+              <strong>YOUR TASK:</strong> {activity.instructions}
             </div>
 
             {/* Task Type: Screen Fixer */}
             {activity.type === 'screen_fixer' && (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginBottom: '24px' }}>
-                {/* Left: Usability Flaw Checklist */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))', gap: '24px', marginBottom: '24px' }}>
+                {/* Left: Usability Flaws Checklist */}
                 <div>
-                  <h4 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '12px', color: 'var(--accent-teal)' }}>
-                    Step 1: Check the Usability Flaws You Spot
+                  <h4 style={{ fontSize: '1rem', fontWeight: 900, textTransform: 'uppercase', marginBottom: '12px' }}>
+                    1. Tap the Usability Flaws You Spot:
                   </h4>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     {activity.interactiveData.screenMock.optionsFlaws.map((flaw: any) => {
                       const isChecked = selectedFlaws.includes(flaw.id);
                       return (
@@ -196,32 +188,31 @@ export const ActivityRunnerModal: React.FC<ActivityRunnerModalProps> = ({
                           key={flaw.id}
                           id={`flaw-${flaw.id}`}
                           onClick={() => toggleFlaw(flaw.id)}
+                          className={`brutal-card ${isChecked ? 'card-lime' : ''}`}
                           style={{
-                            padding: '10px 14px',
-                            borderRadius: '8px',
-                            background: isChecked ? 'rgba(20, 184, 166, 0.15)' : 'rgba(255, 255, 255, 0.04)',
-                            border: isChecked ? '1px solid var(--accent-teal)' : '1px solid var(--border-subtle)',
+                            padding: '12px 14px',
                             cursor: 'pointer',
-                            fontSize: '0.85rem',
+                            fontSize: '0.88rem',
+                            fontWeight: 600,
                             display: 'flex',
-                            gap: '10px',
+                            gap: '12px',
                             alignItems: 'center',
                           }}
                         >
                           <div
                             style={{
-                              width: '18px',
-                              height: '18px',
+                              width: '20px',
+                              height: '20px',
                               borderRadius: '4px',
-                              border: isChecked ? '1px solid var(--accent-teal)' : '1px solid var(--text-faint)',
-                              background: isChecked ? 'var(--accent-teal)' : 'transparent',
+                              border: '2px solid var(--border-ink)',
+                              background: isChecked ? '#121212' : '#FFFFFF',
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
                               flexShrink: 0,
                             }}
                           >
-                            {isChecked && <Check className="w-3.5 h-3.5 text-black" />}
+                            {isChecked && <Check className="w-3.5 h-3.5 text-white stroke-[3]" />}
                           </div>
                           <span>{flaw.text}</span>
                         </div>
@@ -232,29 +223,29 @@ export const ActivityRunnerModal: React.FC<ActivityRunnerModalProps> = ({
 
                 {/* Right: Rearrange Screen Elements */}
                 <div>
-                  <h4 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '12px', color: 'var(--primary-400)' }}>
-                    Step 2: Reorder Elements for Quick Boarding
+                  <h4 style={{ fontSize: '1rem', fontWeight: 900, textTransform: 'uppercase', marginBottom: '12px' }}>
+                    2. Reorder for Rapid Bus Boarding:
                   </h4>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     {screenElements.map((el, index) => (
                       <div
                         key={el.id}
+                        className="brutal-card"
                         style={{
-                          padding: '10px 14px',
-                          borderRadius: '8px',
-                          background: 'rgba(255, 255, 255, 0.05)',
-                          border: '1px solid var(--border-subtle)',
+                          padding: '12px 14px',
+                          background: '#FFFFFF',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'space-between',
-                          fontSize: '0.86rem',
+                          fontSize: '0.88rem',
+                          fontWeight: 700,
                         }}
                       >
-                        <span style={{ fontWeight: 600 }}>{el.name}</span>
+                        <span>{el.name}</span>
                         <div style={{ display: 'flex', gap: '4px' }}>
                           <button
                             type="button"
-                            className="btn btn-ghost btn-sm"
+                            className="btn-brutal btn-white btn-brutal-sm"
                             disabled={index === 0}
                             onClick={() => moveElement(index, 'up')}
                             style={{ padding: '4px 6px' }}
@@ -263,7 +254,7 @@ export const ActivityRunnerModal: React.FC<ActivityRunnerModalProps> = ({
                           </button>
                           <button
                             type="button"
-                            className="btn btn-ghost btn-sm"
+                            className="btn-brutal btn-white btn-brutal-sm"
                             disabled={index === screenElements.length - 1}
                             onClick={() => moveElement(index, 'down')}
                             style={{ padding: '4px 6px' }}
@@ -282,43 +273,42 @@ export const ActivityRunnerModal: React.FC<ActivityRunnerModalProps> = ({
             {activity.type === 'canteen_detective' && (
               <div style={{ marginBottom: '24px' }}>
                 <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.88rem', border: '2.5px solid var(--border-ink)' }}>
                     <thead>
-                      <tr style={{ borderBottom: '1px solid var(--border-subtle)', textAlign: 'left', color: 'var(--text-faint)' }}>
-                        <th style={{ padding: '8px' }}>Day</th>
-                        <th style={{ padding: '8px' }}>Temperature (°C)</th>
-                        <th style={{ padding: '8px' }}>Fruit Bowls Sold</th>
-                        <th style={{ padding: '8px' }}>Samosas Sold</th>
+                      <tr style={{ background: 'var(--accent-yellow)', borderBottom: '2.5px solid var(--border-ink)', textAlign: 'left' }}>
+                        <th style={{ padding: '10px' }}>Day</th>
+                        <th style={{ padding: '10px' }}>Temp (°C)</th>
+                        <th style={{ padding: '10px' }}>Fruit Bowls</th>
+                        <th style={{ padding: '10px' }}>Samosas Sold</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody style={{ background: '#FFFFFF' }}>
                       {activity.interactiveData.records.map((r: any, i: number) => (
-                        <tr key={i} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                          <td style={{ padding: '8px', fontWeight: 600 }}>{r.day}</td>
-                          <td style={{ padding: '8px', color: r.tempC >= 36 ? '#fbbf24' : '#38bdf8', fontWeight: 700 }}>{r.tempC}°C</td>
-                          <td style={{ padding: '8px' }}>{r.fruitBowlsSold}</td>
-                          <td style={{ padding: '8px' }}>{r.samosasSold}</td>
+                        <tr key={i} style={{ borderBottom: '1px solid var(--border-ink)' }}>
+                          <td style={{ padding: '10px', fontWeight: 700 }}>{r.day}</td>
+                          <td style={{ padding: '10px', fontWeight: 800, color: r.tempC >= 36 ? '#b91c1c' : '#2563eb' }}>{r.tempC}°C</td>
+                          <td style={{ padding: '10px', fontWeight: 700 }}>{r.fruitBowlsSold}</td>
+                          <td style={{ padding: '10px', fontWeight: 700 }}>{r.samosasSold}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
 
-                <h4 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '10px' }}>
+                <h4 style={{ fontSize: '1rem', fontWeight: 900, textTransform: 'uppercase', marginBottom: '12px' }}>
                   Which Conclusion is Supported by the Data?
                 </h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   {activity.interactiveData.hypotheses.map((h: any) => (
                     <div
                       key={h.id}
                       onClick={() => setSelectedHypothesis(h.id)}
+                      className={`brutal-card ${selectedHypothesis === h.id ? 'card-lime' : ''}`}
                       style={{
-                        padding: '12px 14px',
-                        borderRadius: '8px',
-                        background: selectedHypothesis === h.id ? 'rgba(99, 102, 241, 0.15)' : 'rgba(255, 255, 255, 0.04)',
-                        border: selectedHypothesis === h.id ? '1px solid var(--primary-400)' : '1px solid var(--border-subtle)',
+                        padding: '14px',
                         cursor: 'pointer',
-                        fontSize: '0.88rem',
+                        fontSize: '0.9rem',
+                        fontWeight: 600,
                       }}
                     >
                       {h.text}
@@ -330,13 +320,14 @@ export const ActivityRunnerModal: React.FC<ActivityRunnerModalProps> = ({
 
             {taskFeedback && (
               <div
+                className="brutal-card"
                 style={{
-                  padding: '12px 16px',
-                  borderRadius: '8px',
-                  background: taskFeedback.includes('Great') || taskFeedback.includes('Brilliant') ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)',
-                  color: taskFeedback.includes('Great') || taskFeedback.includes('Brilliant') ? '#34d399' : '#fbbf24',
-                  fontSize: '0.86rem',
-                  marginBottom: '18px',
+                  padding: '14px 18px',
+                  background: taskFeedback.includes('Great') || taskFeedback.includes('Spot') ? 'var(--accent-lime)' : 'var(--accent-coral)',
+                  color: taskFeedback.includes('Great') || taskFeedback.includes('Spot') ? 'var(--ink-primary)' : '#FFFFFF',
+                  fontWeight: 700,
+                  fontSize: '0.9rem',
+                  marginBottom: '20px',
                 }}
               >
                 {taskFeedback}
@@ -344,8 +335,8 @@ export const ActivityRunnerModal: React.FC<ActivityRunnerModalProps> = ({
             )}
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-              <button id="btn-submit-activity-task" className="btn btn-primary" onClick={verifyTask}>
-                Submit Activity Answer
+              <button id="btn-submit-activity-task" className="btn-brutal btn-lime btn-brutal-lg" onClick={verifyTask}>
+                Submit Activity Answer →
               </button>
             </div>
           </div>
@@ -354,21 +345,23 @@ export const ActivityRunnerModal: React.FC<ActivityRunnerModalProps> = ({
         {/* STAGE 2: REFLECTION QUESTIONS */}
         {stage === 'reflection' && (
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px', color: 'var(--accent-teal)' }}>
-              <CheckCircle className="w-5 h-5" />
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 700 }}>Task Complete! Now Reflect on What You Felt</h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
+              <span className="sticker sticker-lime">TASK ACCOMPLISHED</span>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: 900, textTransform: 'uppercase' }}>
+                Reflect on How it Felt
+              </h3>
             </div>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '24px' }}>
-              We do not measure how "smart" you are. We ask how it felt to do this work:
+            <p style={{ color: 'var(--ink-secondary)', fontSize: '0.92rem', marginBottom: '24px', fontWeight: 500 }}>
+              We do not measure test aptitude. We ask: <em>did you enjoy this style of work?</em>
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginBottom: '28px' }}>
               {activity.reflectionQuestions.map((q, idx) => (
-                <div key={q.id} className="glass-panel" style={{ padding: '18px' }}>
-                  <div style={{ fontWeight: 700, fontSize: '0.92rem', marginBottom: '12px' }}>
-                    {idx + 1}. {q.prompt}
+                <div key={q.id} className="brutal-card" style={{ padding: '20px', background: '#FFFFFF' }}>
+                  <div style={{ fontWeight: 800, fontSize: '0.96rem', marginBottom: '14px' }}>
+                    0{idx + 1}. {q.prompt}
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     {q.options.map(opt => {
                       const isSelected = reflectionAnswers[q.id] === opt.value;
                       return (
@@ -376,13 +369,12 @@ export const ActivityRunnerModal: React.FC<ActivityRunnerModalProps> = ({
                           key={opt.value}
                           id={`ref-opt-${opt.value}`}
                           onClick={() => setReflectionAnswers(prev => ({ ...prev, [q.id]: opt.value }))}
+                          className={`brutal-card ${isSelected ? 'card-lime' : ''}`}
                           style={{
-                            padding: '10px 14px',
-                            borderRadius: '8px',
-                            background: isSelected ? 'rgba(99, 102, 241, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                            border: isSelected ? '1px solid var(--primary-400)' : '1px solid var(--border-subtle)',
+                            padding: '12px 16px',
                             cursor: 'pointer',
-                            fontSize: '0.85rem',
+                            fontSize: '0.88rem',
+                            fontWeight: 600,
                           }}
                         >
                           {opt.label}
@@ -397,17 +389,17 @@ export const ActivityRunnerModal: React.FC<ActivityRunnerModalProps> = ({
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <button
                 id="btn-submit-reflection"
-                className="btn btn-primary"
+                className="btn-brutal btn-lime btn-brutal-lg"
                 disabled={submittingReflection || Object.keys(reflectionAnswers).length === 0}
                 onClick={handleReflectionSubmit}
               >
                 {submittingReflection ? (
                   <>
-                    <RefreshCw className="w-4 h-4 animate-spin" /> Evaluating Experience...
+                    <RefreshCw className="w-5 h-5 animate-spin" /> Evaluating Experience...
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-4 h-4" /> Finish & View Career Coaching
+                    <Sparkles className="w-5 h-5" /> Finish & View Career Coaching →
                   </>
                 )}
               </button>
@@ -418,44 +410,46 @@ export const ActivityRunnerModal: React.FC<ActivityRunnerModalProps> = ({
         {/* STAGE 3: GEMMA COACHING FEEDBACK & PROFILE NUDGE */}
         {stage === 'feedback' && evaluationResult && (
           <div className="animate-fade-in">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-              <Sparkles className="w-6 h-6 text-amber-400" />
-              <h3 style={{ fontSize: '1.35rem', fontWeight: 800 }}>Career Coaching & Experience Nudge</h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px' }}>
+              <span className="sticker sticker-yellow">EXPERIENCE-INFORMED COACHING</span>
+              <h3 style={{ fontSize: '1.5rem', fontWeight: 900, textTransform: 'uppercase' }}>
+                Career Coaching & Profile Nudge
+              </h3>
             </div>
 
-            <div className="glass-panel" style={{ padding: '20px', marginBottom: '20px', borderLeft: '4px solid var(--accent-teal)' }}>
-              <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#38bdf8', marginBottom: '6px' }}>
-                Coach Evaluation:
+            <div className="brutal-card card-lime" style={{ padding: '24px', marginBottom: '24px' }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, fontSize: '0.8rem', marginBottom: '6px' }}>
+                [COACH FEEDBACK]
               </div>
-              <p style={{ color: 'var(--text-main)', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: '10px' }}>
+              <p style={{ fontSize: '0.98rem', fontWeight: 600, lineHeight: '1.6', marginBottom: '14px' }}>
                 {evaluationResult.evaluation.praise}
               </p>
-              <div style={{ fontSize: '0.86rem', color: 'var(--text-muted)', lineHeight: '1.5' }}>
+              <div style={{ fontSize: '0.88rem', color: 'var(--ink-secondary)', fontWeight: 600 }}>
                 <strong>Industry Reality:</strong> {evaluationResult.evaluation.real_world_application}
               </div>
             </div>
 
-            {/* What Changed in Profile Display */}
+            {/* Dimension Shift Nudge */}
             {evaluationResult.dimensionShift && Object.keys(evaluationResult.dimensionShift).length > 0 && (
-              <div className="glass-panel" style={{ padding: '16px', marginBottom: '24px', background: 'rgba(99, 102, 241, 0.08)' }}>
-                <div style={{ fontWeight: 700, fontSize: '0.88rem', color: 'var(--primary-400)', marginBottom: '6px' }}>
-                  What Changed in Your Exploration Profile:
+              <div className="brutal-card card-yellow" style={{ padding: '20px', marginBottom: '28px' }}>
+                <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, fontSize: '0.8rem', marginBottom: '8px' }}>
+                  [WHAT CHANGED IN YOUR HOLLAND PROFILE]
                 </div>
                 <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                   {Object.entries(evaluationResult.dimensionShift).map(([dim, val]) => (
-                    <span key={dim} className="badge badge-strong">
-                      Dimension {dim}: +{Math.round((val as number) * 100)}% from this hands-on trial
+                    <span key={dim} className="sticker sticker-coral">
+                      DIMENSION {dim}: +{Math.round((val as number) * 100)}% FROM THIS TRIAL
                     </span>
                   ))}
                 </div>
-                <div style={{ fontSize: '0.78rem', color: 'var(--text-faint)', marginTop: '8px' }}>
-                  This reflects one small hands-on experience, not a fixed psychometric verdict. You can always undo or test other activities.
+                <div style={{ fontSize: '0.8rem', color: 'var(--ink-secondary)', marginTop: '10px', fontWeight: 600 }}>
+                  This nudges your exploration profile based on practical experience, not an aptitude verdict. You can always try other activities to test other fields!
                 </div>
               </div>
             )}
 
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <button id="btn-done-activity" className="btn btn-primary" onClick={onClose}>
+              <button id="btn-done-activity" className="btn-brutal btn-cobalt btn-brutal-lg" onClick={onClose}>
                 Done & Return to Career Profile
               </button>
             </div>

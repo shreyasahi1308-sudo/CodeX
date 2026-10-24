@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, ArrowRight, ArrowLeft, Check, Compass, HelpCircle, RefreshCw } from 'lucide-react';
+import { Sparkles, ArrowRight, ArrowLeft, Check, Compass, HelpCircle, RefreshCw, Zap } from 'lucide-react';
 import { api, RecommendationResponse } from '../../lib/api';
 
 interface QuestionnaireWizardProps {
@@ -114,42 +114,57 @@ export const QuestionnaireWizard: React.FC<QuestionnaireWizardProps> = ({ onComp
   if (loading) {
     return (
       <div className="container" style={{ padding: '80px 0', textAlign: 'center' }}>
-        <RefreshCw className="w-8 h-8 text-indigo-400 animate-spin" style={{ margin: '0 auto 16px auto' }} />
-        <p style={{ color: 'var(--text-muted)' }}>Loading questionnaire bank...</p>
+        <RefreshCw className="w-8 h-8 text-black animate-spin" style={{ margin: '0 auto 16px auto' }} />
+        <p style={{ color: 'var(--ink-secondary)', fontFamily: 'var(--font-mono)' }}>LOADING QUESTIONNAIRE BANK...</p>
       </div>
     );
   }
 
   return (
-    <div className="container animate-fade-in" style={{ padding: '40px 0 80px 0', maxWidth: '800px' }}>
-      {/* Top Header & Fast Pre-fill */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
+    <div className="container animate-fade-in" style={{ padding: '30px 0 80px 0', maxWidth: '860px' }}>
+      {/* Top Header Card */}
+      <div
+        className="brutal-card"
+        style={{
+          padding: '24px 28px',
+          marginBottom: '28px',
+          background: '#FFFFFF',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '16px',
+        }}
+      >
         <div>
-          <span className="badge badge-cluster">Step {step} of 4</span>
-          <h2 style={{ fontSize: '1.6rem', fontWeight: 800, marginTop: '6px' }}>
-            {step === 1 && 'What kind of activities energize you?'}
-            {step === 2 && 'Which subjects do you enjoy most?'}
-            {step === 3 && 'Which skills would you love to build?'}
-            {step === 4 && 'Work environment & openness'}
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '6px' }}>
+            <span className="sticker sticker-lime">STAGE 0{step} OF 04</span>
+            <span className="stamp">HOLLAND RIASEC ENGINE</span>
+          </div>
+          <h2 style={{ fontSize: '1.75rem', fontWeight: 900, textTransform: 'uppercase' }}>
+            {step === 1 && '18 Hands-On Activity Tasks'}
+            {step === 2 && 'School Subject Affinities'}
+            {step === 3 && 'Skills You Love Building'}
+            {step === 4 && 'Work Setting & Discovery Openness'}
           </h2>
         </div>
 
         <button
           id="btn-prefill-demo"
-          className="btn btn-secondary btn-sm"
+          className="btn-brutal btn-yellow btn-brutal-sm"
           onClick={prefillAsha}
           title="Fills realistic answers for persona Asha from Master Blueprint"
         >
-          <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+          <Zap className="w-4 h-4 fill-black" />
           Load Demo Student (Asha)
         </button>
       </div>
 
-      {/* Progress Bar */}
-      <div style={{ marginBottom: '30px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '6px' }}>
-          <span>Exploration Progress</span>
-          <span>{progressPercent}% Complete</span>
+      {/* Progress Bar & Status */}
+      <div style={{ marginBottom: '28px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', fontFamily: 'var(--font-mono)', fontWeight: 700, marginBottom: '8px' }}>
+          <span>[PROGRESS TRACKER]</span>
+          <span>{progressPercent}% COMPLETED</span>
         </div>
         <div className="progress-container">
           <div className="progress-fill" style={{ width: `${progressPercent}%` }} />
@@ -160,22 +175,20 @@ export const QuestionnaireWizard: React.FC<QuestionnaireWizardProps> = ({ onComp
       {step === 1 && (
         <div>
           <div
+            className="brutal-card card-yellow"
             style={{
-              background: 'rgba(99, 102, 241, 0.08)',
-              border: '1px solid rgba(99, 102, 241, 0.2)',
-              borderRadius: '10px',
-              padding: '14px 18px',
+              padding: '16px 20px',
               marginBottom: '24px',
               display: 'flex',
               alignItems: 'center',
               gap: '12px',
-              fontSize: '0.88rem',
-              color: 'var(--text-muted)',
+              fontSize: '0.92rem',
+              fontWeight: 600,
             }}
           >
-            <HelpCircle className="w-5 h-5 text-indigo-400 shrink-0" />
+            <HelpCircle className="w-5 h-5 text-black shrink-0" />
             <span>
-              <strong>Prompt:</strong> Imagine you had time, resources, and help. How much would you enjoy doing each task? Rate from 1 (Not at all) to 5 (Loved it!).
+              <strong>PROMPT:</strong> Imagine you had time, help, and zero exam stress. How much would you genuinely enjoy doing each task? Rate from <strong>1 (Not at all)</strong> to <strong>5 (Loved it!)</strong>.
             </span>
           </div>
 
@@ -185,18 +198,28 @@ export const QuestionnaireWizard: React.FC<QuestionnaireWizardProps> = ({ onComp
               return (
                 <div
                   key={q.id}
-                  className="glass-panel"
+                  className="brutal-card"
                   style={{
-                    padding: '18px 20px',
-                    borderColor: currentRating > 0 ? 'rgba(99, 102, 241, 0.3)' : 'var(--border-subtle)',
+                    padding: '20px',
+                    background: currentRating > 0 ? '#FFFFFF' : '#FAF9F5',
+                    borderLeft: currentRating > 0 ? '6px solid var(--border-ink)' : 'var(--border-width) solid var(--border-ink)',
                   }}
                 >
-                  <div style={{ fontSize: '0.96rem', fontWeight: 600, marginBottom: '14px', lineHeight: 1.5 }}>
-                    <span style={{ color: 'var(--primary-400)', marginRight: '8px' }}>{idx + 1}.</span>
-                    {q.prompt}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px' }}>
+                    <div style={{ fontSize: '1rem', fontWeight: 700, lineHeight: 1.4, flex: 1 }}>
+                      <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--accent-cobalt)', marginRight: '10px', fontWeight: 800 }}>
+                        [{String(idx + 1).padStart(2, '0')}]
+                      </span>
+                      {q.prompt}
+                    </div>
+                    {currentRating > 0 && (
+                      <span className="sticker sticker-lime" style={{ fontSize: '0.72rem' }}>
+                        RATED: {currentRating}/5
+                      </span>
+                    )}
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px' }}>
                     {[
                       { val: 1, label: 'Not at all' },
                       { val: 2, label: 'A little' },
@@ -211,24 +234,17 @@ export const QuestionnaireWizard: React.FC<QuestionnaireWizardProps> = ({ onComp
                           type="button"
                           id={`rating-${q.id}-${opt.val}`}
                           onClick={() => handleRatingChange(q.id, opt.val)}
+                          className={`btn-brutal ${isSelected ? 'btn-lime' : 'btn-white'}`}
                           style={{
                             padding: '10px 4px',
-                            borderRadius: '8px',
-                            background: isSelected ? 'var(--primary-600)' : 'rgba(255, 255, 255, 0.05)',
-                            color: isSelected ? '#ffffff' : 'var(--text-muted)',
-                            border: isSelected ? '1px solid var(--primary-400)' : '1px solid transparent',
-                            fontWeight: isSelected ? 700 : 500,
-                            cursor: 'pointer',
-                            fontSize: '0.78rem',
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
                             gap: '4px',
-                            transition: 'all 0.15s',
                           }}
                         >
-                          <span style={{ fontSize: '1rem', fontWeight: 800 }}>{opt.val}</span>
-                          <span style={{ textAlign: 'center', lineHeight: 1.2 }}>{opt.label}</span>
+                          <span style={{ fontSize: '1.15rem', fontWeight: 900 }}>{opt.val}</span>
+                          <span style={{ fontSize: '0.74rem', textAlign: 'center', lineHeight: 1.1 }}>{opt.label}</span>
                         </button>
                       );
                     })}
@@ -239,17 +255,17 @@ export const QuestionnaireWizard: React.FC<QuestionnaireWizardProps> = ({ onComp
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <button className="btn btn-ghost" onClick={onCancel}>
-              Cancel
+            <button className="btn-brutal btn-white" onClick={onCancel}>
+              ← Exit to Home
             </button>
             <button
               id="wizard-step1-next"
-              className="btn btn-primary"
+              className="btn-brutal btn-lime btn-brutal-lg"
               disabled={answeredActivitiesCount < 6}
               onClick={() => setStep(2)}
             >
-              Next: Favorite Subjects ({answeredActivitiesCount}/18 Rated)
-              <ArrowRight className="w-4 h-4" />
+              Continue to Subjects ({answeredActivitiesCount}/18 Rated)
+              <ArrowRight className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -258,11 +274,13 @@ export const QuestionnaireWizard: React.FC<QuestionnaireWizardProps> = ({ onComp
       {/* STEP 2: Academic Subjects */}
       {step === 2 && (
         <div>
-          <p style={{ color: 'var(--text-muted)', marginBottom: '20px', fontSize: '0.95rem' }}>
-            Select up to <strong>3 subjects</strong> you find genuinely engaging or would like to study in Classes 11–12:
-          </p>
+          <div className="brutal-card card-cobalt" style={{ padding: '16px 20px', marginBottom: '24px' }}>
+            <div style={{ fontWeight: 800, fontSize: '0.95rem' }}>
+              CHOOSE UP TO 3 HIGH SCHOOL SUBJECTS YOU ENJOY OR WANT TO STUDY IN CLASS 11–12:
+            </div>
+          </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px', marginBottom: '32px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '14px', marginBottom: '32px' }}>
             {subjectsList.map(subj => {
               const isSelected = selectedSubjects.includes(subj.id);
               return (
@@ -270,41 +288,40 @@ export const QuestionnaireWizard: React.FC<QuestionnaireWizardProps> = ({ onComp
                   key={subj.id}
                   id={`subject-${subj.id}`}
                   onClick={() => toggleSubject(subj.id)}
+                  className={`brutal-card ${isSelected ? 'card-lime' : ''}`}
                   style={{
-                    padding: '14px 16px',
-                    borderRadius: '10px',
-                    background: isSelected ? 'rgba(99, 102, 241, 0.18)' : 'rgba(255, 255, 255, 0.04)',
-                    border: isSelected ? '1px solid var(--primary-400)' : '1px solid var(--border-subtle)',
+                    padding: '16px',
                     cursor: 'pointer',
                     display: 'flex',
-                    alignItems: 'center',
+                    flexDirection: 'column',
                     justifyContent: 'space-between',
-                    transition: 'all 0.15s',
                   }}
                 >
-                  <div>
-                    <div style={{ fontWeight: 600, fontSize: '0.92rem', color: isSelected ? '#ffffff' : 'var(--text-main)' }}>
-                      {subj.label}
-                    </div>
-                    <div style={{ fontSize: '0.74rem', color: 'var(--text-faint)' }}>{subj.stream}</div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+                    <span style={{ fontWeight: 800, fontSize: '1rem' }}>{subj.label}</span>
+                    {isSelected && (
+                      <div style={{ width: '22px', height: '22px', borderRadius: '4px', background: '#121212', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Check className="w-3.5 h-3.5 text-white" />
+                      </div>
+                    )}
                   </div>
-                  {isSelected && <Check className="w-4 h-4 text-indigo-400" />}
+                  <span className="stamp" style={{ alignSelf: 'flex-start' }}>{subj.stream}</span>
                 </div>
               );
             })}
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <button className="btn btn-secondary" onClick={() => setStep(1)}>
+            <button className="btn-brutal btn-white" onClick={() => setStep(1)}>
               <ArrowLeft className="w-4 h-4" /> Back to Activities
             </button>
             <button
               id="wizard-step2-next"
-              className="btn btn-primary"
+              className="btn-brutal btn-lime btn-brutal-lg"
               onClick={() => setStep(3)}
             >
-              Next: Skills to Grow ({selectedSubjects.length}/3)
-              <ArrowRight className="w-4 h-4" />
+              Continue to Skills ({selectedSubjects.length}/3 Picked)
+              <ArrowRight className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -313,11 +330,13 @@ export const QuestionnaireWizard: React.FC<QuestionnaireWizardProps> = ({ onComp
       {/* STEP 3: Skills to Build */}
       {step === 3 && (
         <div>
-          <p style={{ color: 'var(--text-muted)', marginBottom: '20px', fontSize: '0.95rem' }}>
-            Choose up to <strong>3 capabilities</strong> you would love to master during school and college:
-          </p>
+          <div className="brutal-card card-cyan" style={{ padding: '16px 20px', marginBottom: '24px' }}>
+            <div style={{ fontWeight: 800, fontSize: '0.95rem' }}>
+              PICK UP TO 3 CAPABILITIES YOU WOULD LOVE TO MASTER DURING SCHOOL & COLLEGE:
+            </div>
+          </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px', marginBottom: '32px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '14px', marginBottom: '32px' }}>
             {skillsList.map(sk => {
               const isSelected = selectedSkills.includes(sk.id);
               return (
@@ -325,38 +344,37 @@ export const QuestionnaireWizard: React.FC<QuestionnaireWizardProps> = ({ onComp
                   key={sk.id}
                   id={`skill-${sk.id}`}
                   onClick={() => toggleSkill(sk.id)}
+                  className={`brutal-card ${isSelected ? 'card-yellow' : ''}`}
                   style={{
-                    padding: '14px 16px',
-                    borderRadius: '10px',
-                    background: isSelected ? 'rgba(20, 184, 166, 0.18)' : 'rgba(255, 255, 255, 0.04)',
-                    border: isSelected ? '1px solid var(--accent-teal)' : '1px solid var(--border-subtle)',
+                    padding: '16px',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    transition: 'all 0.15s',
                   }}
                 >
-                  <span style={{ fontWeight: 600, fontSize: '0.92rem', color: isSelected ? '#ffffff' : 'var(--text-main)' }}>
-                    {sk.label}
-                  </span>
-                  {isSelected && <Check className="w-4 h-4 text-teal-400" />}
+                  <span style={{ fontWeight: 800, fontSize: '0.92rem' }}>{sk.label}</span>
+                  {isSelected && (
+                    <div style={{ width: '22px', height: '22px', borderRadius: '4px', background: '#121212', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Check className="w-3.5 h-3.5 text-white" />
+                    </div>
+                  )}
                 </div>
               );
             })}
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <button className="btn btn-secondary" onClick={() => setStep(2)}>
+            <button className="btn-brutal btn-white" onClick={() => setStep(2)}>
               <ArrowLeft className="w-4 h-4" /> Back to Subjects
             </button>
             <button
               id="wizard-step3-next"
-              className="btn btn-primary"
+              className="btn-brutal btn-lime btn-brutal-lg"
               onClick={() => setStep(4)}
             >
-              Next: Work Settings & Openness
-              <ArrowRight className="w-4 h-4" />
+              Continue: Work Setting & Openness
+              <ArrowRight className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -365,15 +383,15 @@ export const QuestionnaireWizard: React.FC<QuestionnaireWizardProps> = ({ onComp
       {/* STEP 4: Environments & Openness */}
       {step === 4 && (
         <div>
-          <div style={{ marginBottom: '30px' }}>
-            <div style={{ fontWeight: 700, fontSize: '1rem', marginBottom: '6px' }}>
-              Preferred Work Environment (Optional, pick up to 2)
-            </div>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '14px' }}>
-              Where do you picture yourself doing your best thinking?
+          <div style={{ marginBottom: '32px' }}>
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 900, textTransform: 'uppercase', marginBottom: '8px' }}>
+              Preferred Work Environment (Pick up to 2)
+            </h3>
+            <p style={{ color: 'var(--ink-secondary)', fontSize: '0.9rem', marginBottom: '16px' }}>
+              Where do you picture yourself doing your best thinking and collaborating?
             </p>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
               {envsList.map(env => {
                 const isSelected = selectedEnvs.includes(env.id);
                 return (
@@ -381,33 +399,31 @@ export const QuestionnaireWizard: React.FC<QuestionnaireWizardProps> = ({ onComp
                     key={env.id}
                     id={`env-${env.id}`}
                     onClick={() => toggleEnv(env.id)}
+                    className={`brutal-card ${isSelected ? 'card-lime' : ''}`}
                     style={{
-                      padding: '12px 14px',
-                      borderRadius: '8px',
-                      background: isSelected ? 'rgba(99, 102, 241, 0.18)' : 'rgba(255, 255, 255, 0.04)',
-                      border: isSelected ? '1px solid var(--primary-400)' : '1px solid var(--border-subtle)',
+                      padding: '14px 16px',
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
-                      fontSize: '0.88rem',
-                      fontWeight: 600,
+                      fontWeight: 700,
+                      fontSize: '0.9rem',
                     }}
                   >
                     <span>{env.label}</span>
-                    {isSelected && <Check className="w-4 h-4 text-indigo-400" />}
+                    {isSelected && <Check className="w-4 h-4 text-black stroke-[3]" />}
                   </div>
                 );
               })}
             </div>
           </div>
 
-          <div className="glass-panel" style={{ padding: '24px', marginBottom: '36px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-              <label htmlFor="openness-range" style={{ fontWeight: 700, fontSize: '0.95rem' }}>
+          <div className="brutal-card" style={{ padding: '24px', background: '#FFFFFF', marginBottom: '36px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+              <label htmlFor="openness-range" style={{ fontWeight: 800, fontSize: '1rem', textTransform: 'uppercase' }}>
                 How open are you to careers you haven't heard of before?
               </label>
-              <span style={{ color: 'var(--accent-teal)', fontWeight: 800 }}>Level {openness} of 5</span>
+              <span className="sticker sticker-coral">LEVEL {openness} OF 5</span>
             </div>
             <input
               id="openness-range"
@@ -416,9 +432,9 @@ export const QuestionnaireWizard: React.FC<QuestionnaireWizardProps> = ({ onComp
               max={5}
               value={openness}
               onChange={e => setOpenness(parseInt(e.target.value, 10))}
-              style={{ width: '100%', accentColor: 'var(--primary-500)', height: '6px', cursor: 'pointer' }}
+              style={{ width: '100%', accentColor: 'var(--ink-primary)', height: '10px', cursor: 'pointer' }}
             />
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', color: 'var(--text-faint)', marginTop: '6px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', fontFamily: 'var(--font-mono)', color: 'var(--ink-muted)', marginTop: '8px' }}>
               <span>Show familiar careers only (1)</span>
               <span>Balanced mix (3)</span>
               <span>Show adventurous stretch options! (5)</span>
@@ -426,24 +442,24 @@ export const QuestionnaireWizard: React.FC<QuestionnaireWizardProps> = ({ onComp
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <button className="btn btn-secondary" onClick={() => setStep(3)}>
+            <button className="btn-brutal btn-white" onClick={() => setStep(3)}>
               <ArrowLeft className="w-4 h-4" /> Back to Skills
             </button>
             <button
               id="btn-submit-assessment"
-              className="btn btn-primary btn-lg"
+              className="btn-brutal btn-lime btn-brutal-lg"
               disabled={submitting}
               onClick={handleSubmit}
             >
               {submitting ? (
                 <>
-                  <RefreshCw className="w-4 h-4 animate-spin" />
-                  Calculating Transparent Match...
+                  <RefreshCw className="w-5 h-5 animate-spin" />
+                  Calculating Explainable Match...
                 </>
               ) : (
                 <>
                   <Compass className="w-5 h-5" />
-                  Reveal My Personalized Recommendations
+                  Reveal My Personalized Recommendations →
                 </>
               )}
             </button>
