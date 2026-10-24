@@ -34,7 +34,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <Compass className="w-6 h-6 text-ink-primary" />
           </div>
           <div>
-            <div className="nav-brand-title">PathLab India</div>
+            <div className="nav-brand-title">FIGUROUT</div>
             <div className="nav-brand-subtitle">Classes 9–12 Career Discovery</div>
           </div>
         </div>

@@ -100,7 +100,7 @@ export const Footer: React.FC = () => {
                 <Compass className="w-4 h-4" />
               </div>
               <div style={{ fontWeight: 900, fontSize: '1.25rem', fontFamily: 'var(--font-display)', letterSpacing: '-0.02em' }}>
-                PathLab India
+                FIGUROUT
               </div>
             </div>
 
@@ -204,7 +204,7 @@ export const Footer: React.FC = () => {
           }}
         >
           <div>
-            © 2026 PathLab India · Powered by <strong>Google Gemma 4</strong> (31B-it Novita via HF Router)
+            © 2026 FIGUROUT · Powered by <strong>Google Gemma 4</strong> (31B-it Novita via HF Router)
           </div>
 
           <div style={{ display: 'flex', gap: '14px', alignItems: 'center', flexWrap: 'wrap' }}>

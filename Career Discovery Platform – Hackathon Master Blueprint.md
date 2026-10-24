@@ -30,7 +30,7 @@ Research was run on 24 Oct 2026 with a limited number of searches. Several stati
 | 9 | Hindi + English for questionnaire UI only (P2); career content English first | Realistic scope |
 | 10 | **Scope freeze at hour 8**, early deploy at hour 4 | Most hackathon failures are integration and deployment failures |
 
-**Suggested names** (check domain and trademark conflicts yourselves; several similar names exist in the market): **Khoj** (Hindi: search, discovery), **Raahi** (traveller), **PathLab** (experiment with paths), **Dishaa Lab**, **TryPath**. Our pick: **PathLab** – signals “try and experiment”, works in English and Hindi-speaking contexts, and fits the signature feature.
+**Suggested names** (check domain and trademark conflicts yourselves; several similar names exist in the market): **Khoj** (Hindi: search, discovery), **Raahi** (traveller), **PathLab** (experiment with paths), **Dishaa Lab**, **TryPath**. Our pick: **FIGUROUT** – signals figuring out paths and trying experiences, works in English and Hindi-speaking contexts, and fits the signature feature.
 
 ## 4. Research findings
 
@@ -174,7 +174,7 @@ Effort assumes a 3–4 person team with an AI coding agent. Tiers: **P0** essent
 
 ### 6.1 Journey in one paragraph
 
-A student opens PathLab on a phone, reads a 20-second privacy note (“no name, no account, answers stay on this device”), answers six short activity pages, picks subjects and skills, sees six to eight career cards in three groups (*Strong overlap*, *Good overlap*, *Something different*), each with the answers that drove it. She opens one, reads a plain-language day-in-the-life and the education routes with official links, tries a five-minute activity, reflects, sees how her results shifted, compares two careers, saves three, and leaves with a one-page “things to try and people to talk to” summary.
+A student opens FIGUROUT on a phone, reads a 20-second privacy note (“no name, no account, answers stay on this device”), answers six short activity pages, picks subjects and skills, sees six to eight career cards in three groups (*Strong overlap*, *Good overlap*, *Something different*), each with the answers that drove it. She opens one, reads a plain-language day-in-the-life and the education routes with official links, tries a five-minute activity, reflects, sees how her results shifted, compares two careers, saves three, and leaves with a one-page “things to try and people to talk to” summary.
 
 ### 6.2 Screens (all P0 unless marked)
 
@@ -450,7 +450,7 @@ flowchart LR
 ### 9.3 Folder structure
 
 ```
-pathlab/
+figurout/
   README.md  SPEC.md  DECISIONS.md
   package.json  vite.config.ts  tailwind.config.ts  .env.example
   api/explain.ts                 # serverless function (only AI touch point)
@@ -491,7 +491,7 @@ Errors: `400` invalid body, `429` rate limited, `502/504` upstream failure. The 
 
 - **Client validation:** question pages cannot submit out-of-range values; `answers` is versioned (`schemaVersion`) and migrated or discarded if outdated.
 - **Data validation:** `npm run validate:data` fails the build if a career lacks sources, `lastVerified`, or has a dangling `adjacent` id.
-- **Commands:** `npm create vite@latest pathlab -- --template react-ts` · `npm i` · `npm run dev` · `npm run test` · `npm run validate:data` · `npm run build`.
+- **Commands:** `npm create vite@latest figurout -- --template react-ts` · `npm i` · `npm run dev` · `npm run test` · `npm run validate:data` · `npm run build`.
 - **Env vars:** `LLM_API_KEY`, `LLM_MODEL`, `AI_ENABLED` (true/false). Only in the host's secret store and a local `.env` that is git-ignored; commit `.env.example` with empty values.
 
 # PART 3 – Design, Signature Feature, Team, Schedule, Testing, Risk, Deploy
@@ -866,7 +866,7 @@ Must not change: scope. Anything beyond P0 fixes requires my approval.
 
 ### 19.1 Thirty-second pitch
 
-*“Most students choose a stream using marks, friends and the three careers they have heard of. PathLab lets you explore careers by what you enjoy doing, shows exactly why each one came up, lets you try a five-minute task from a career, and then updates your options openly. It is private, needs no sign-up, and works even when AI is off. It does not predict your future – it helps you explore, and then talk to people who can help.”*
+*“Most students choose a stream using marks, friends and the three careers they have heard of. FIGUROUT lets you explore careers by what you enjoy doing, shows exactly why each one came up, lets you try a five-minute task from a career, and then updates your options openly. It is private, needs no sign-up, and works even when AI is off. It does not predict your future – it helps you explore, and then talk to people who can help.”*
 
 ### 19.2 The 2–3 minute live demo (persona: Asha, Class 10, likes science)
 

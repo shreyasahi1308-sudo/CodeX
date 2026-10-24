@@ -1,4 +1,4 @@
-# PathLab India — Career Discovery Platform (Classes 9–12)
+# FIGUROUT — Career Discovery Platform (Classes 9–12)
 ### Full-Stack Implementation with React, Node.js, SQLite, and Google Gemma 4
 
 [![Build Status](https://img.shields.io/badge/Build-Passing-emerald)](https://github.com)
@@ -10,7 +10,7 @@
 
 ## 1. Overview & Objective
 
-**PathLab India** is an intelligent, transparent, and privacy-first career discovery web application engineered specifically for Indian high school students (Classes 9–12, ages 14–18).
+**FIGUROUT** is an intelligent, transparent, and privacy-first career discovery web application engineered specifically for Indian high school students (Classes 9–12, ages 14–18).
 
 The platform tackles a critical challenge in Indian secondary education: students often select high-stakes academic streams (Science PCM, Science PCB, Commerce with/without Math, Humanities) under intense societal pressure without structured exposure to diverse careers, verified national entrance examinations, educational pathways, or practical micro-experiences of what professionals actually do day-to-day.
 
