@@ -5,12 +5,14 @@ interface HeroProps {
   onStartQuiz: () => void;
   onBrowseCareers: () => void;
   onExploreSimulations: () => void;
+  onOpenMentor?: () => void;
 }
 
 export const Hero: React.FC<HeroProps> = ({
   onStartQuiz,
   onBrowseCareers,
   onExploreSimulations,
+  onOpenMentor,
 }) => {
   return (
     <div className="animate-fade-in" style={{ padding: '40px 0 60px 0' }}>
@@ -248,20 +250,37 @@ export const Hero: React.FC<HeroProps> = ({
 
           {/* Bento Card 5: Gemma 4 AI Mentor (Spans 4 columns) */}
           <div
+            id="card-interactive-career-mentor"
             className="brutal-card card-dark"
+            onClick={onOpenMentor}
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onOpenMentor?.();
+              }
+            }}
             style={{
               gridColumn: 'span 4',
               padding: '28px',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
+              cursor: 'pointer',
+              transition: 'transform var(--transition-fast), box-shadow var(--transition-fast)',
             }}
           >
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                <Sparkles className="w-5 h-5 text-yellow-300" />
-                <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, fontSize: '0.78rem', color: '#D4FF32', textTransform: 'uppercase' }}>
-                  Gemma 4 (31B-it Novita)
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Sparkles className="w-5 h-5 text-yellow-300" />
+                  <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, fontSize: '0.78rem', color: '#D4FF32', textTransform: 'uppercase' }}>
+                    Gemma 4 (31B-it Novita)
+                  </span>
+                </div>
+                <span className="sticker sticker-lime" style={{ fontSize: '0.68rem', padding: '2px 8px' }}>
+                  CLICK TO LAUNCH ↗
                 </span>
               </div>
               <h3 style={{ fontSize: '1.3rem', fontWeight: 900, marginBottom: '10px', color: '#FFFFFF' }}>
@@ -272,9 +291,21 @@ export const Hero: React.FC<HeroProps> = ({
               </p>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', color: '#9CA3AF', fontFamily: 'var(--font-mono)' }}>
-              <span className="badge" style={{ background: '#22c55e', color: '#000', fontWeight: 800 }}>LIVE</span>
-              <span>HF Router + Local Fallback</span>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', color: '#9CA3AF', fontFamily: 'var(--font-mono)' }}>
+                <span className="badge" style={{ background: '#22c55e', color: '#000', fontWeight: 800, padding: '2px 6px', borderRadius: '4px' }}>LIVE</span>
+                <span>HF Router + Local Fallback</span>
+              </div>
+              <button
+                id="btn-launch-career-mentor"
+                className="btn-brutal btn-lime btn-brutal-sm"
+                onClick={e => {
+                  e.stopPropagation();
+                  onOpenMentor?.();
+                }}
+              >
+                Chat with Gemma <ArrowRight className="w-3.5 h-3.5" />
+              </button>
             </div>
           </div>
         </div>

@@ -44,6 +44,7 @@ router.get('/careers', careerController.getAll);
 router.get('/careers/:id', careerController.getById);
 router.post('/careers/:id/explain', careerController.explainFit);
 router.post('/careers/:id/ask', careerController.askMentor);
+router.post('/mentor/chat', careerController.generalMentorChat);
 router.post('/compare', careerController.compare);
 
 // Interactive Activities Routes

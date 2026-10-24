@@ -134,7 +134,7 @@ Respond ONLY with a valid JSON object matching this schema:
  * Interactive "Ask Gemma" Career Mentor
  */
 export async function askCareerMentor(
-  career: Career,
+  career: Career | undefined | null,
   question: string,
   history: { role: 'user' | 'assistant'; content: string }[] = []
 ): Promise<{ reply: string; meta: AIResponseMeta }> {
@@ -142,10 +142,8 @@ export async function askCareerMentor(
 
   if (client) {
     try {
-      const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
-        {
-          role: 'system',
-          content: `You are Gemma, an insightful and honest career mentor for Indian high school students (Classes 9–12).
+      const systemPrompt = career
+        ? `You are Gemma, an insightful and honest career mentor for Indian high school students (Classes 9–12).
 You are mentoring a student asking about the career "${career.name}".
 Ground your answers strictly in these verified facts about the career:
 - Title: ${career.name}
@@ -160,9 +158,25 @@ Ground your answers strictly in these verified facts about the career:
 Guardrails:
 - Never predict the student's destiny or guarantee admission.
 - Be supportive, realistic about competition, and concise (under 180 words).
-- If asked about coaching or fees, advise consulting official institute websites and parents/teachers.`,
+- If asked about coaching or fees, advise consulting official institute websites and parents/teachers.`
+        : `You are Gemma, an encouraging, objective, and realistic AI Career Mentor for Indian school students in Classes 9–12 (across CBSE, ICSE, and State Boards).
+Your goal is to help students explore education pathways, stream choices (Science/PCM, Science/PCB, Commerce, Humanities/Arts), entrance exams (such as JEE, NEET, CUET, CLAT, NID, UCEED, NDA, CA Foundation), skill building, and career options without bias or pressure.
+
+Guardrails:
+- Explain careers, skills, subjects, entrance exams, education pathways, and alternative routes in simple, student-friendly language.
+- Ask clarifying questions when the student's interests, current class, or goals are unclear.
+- Never guarantee admission, exam ranks, future salary outcomes, or career success.
+- Direct users to official sources (like NTA, NCERT, NCS) for official dates, syllabus, and reservation policies.
+- Encourage exploration and low-stakes experimentation; never imply that a student's marks or single exam permanently limits their future.
+- Avoid recommending expensive private coaching as mandatory; highlight self-study, NCERT textbooks, open educational resources, and institutional libraries.
+- Be concise, structured (bullet points where appropriate), supportive, and keep replies under 200 words.`;
+
+      const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
+        {
+          role: 'system',
+          content: systemPrompt,
         },
-        ...history.slice(-4).map(h => ({ role: h.role, content: h.content } as const)),
+        ...history.slice(-6).map(h => ({ role: h.role, content: h.content } as const)),
         { role: 'user', content: question },
       ];
 
@@ -170,7 +184,7 @@ Guardrails:
         model: GEMMA_MODEL,
         messages,
         temperature: 0.5,
-        max_tokens: 350,
+        max_tokens: 380,
       });
 
       const reply = completion.choices[0]?.message?.content;
@@ -197,7 +211,7 @@ Guardrails:
       aiGenerated: false,
       model: 'deterministic_engine_v1',
       timestamp: new Date().toISOString(),
-      statusNote: 'Deterministic counselor guidance (AI offline).',
+      statusNote: 'Deterministic counselor guidance (AI offline or quota exhausted).',
     },
   };
 }
@@ -308,29 +322,96 @@ function generateDeterministicExplanation(
   };
 }
 
-function generateDeterministicMentorReply(career: Career, question: string): string {
+function generateDeterministicMentorReply(career: Career | undefined | null, question: string): string {
   const q = question.toLowerCase();
 
-  if (q.includes('stream') || q.includes('class 11') || q.includes('subject')) {
-    const p = career.pathways[0];
-    return `For ${career.name}, the recommended Class 11-12 preparation is: ${p?.streamRequired}. Key subjects typically include ${career.subjects.map(s => s.replace(/-/g, ' ')).join(', ')}. Check each university or institute for exact subject eligibility criteria.`;
-  }
-
-  if (q.includes('exam') || q.includes('entrance') || q.includes('jee') || q.includes('neet') || q.includes('clat')) {
-    const exams = career.pathways.flatMap(p => p.exams || []);
-    if (exams.length > 0) {
-      return `Key verified entrance examinations for ${career.name} include: ${exams.map(e => `${e.name} (${e.officialUrl})`).join(', ')}. Dates and formats update annually on their respective official portals.`;
+  // If specific career is provided, use career-grounded responses
+  if (career) {
+    if (q.includes('stream') || q.includes('class 11') || q.includes('subject')) {
+      const p = career.pathways[0];
+      return `For ${career.name}, the recommended Class 11-12 preparation is: ${p?.streamRequired}. Key subjects typically include ${career.subjects.map(s => s.replace(/-/g, ' ')).join(', ')}. Check each university or institute for exact subject eligibility criteria.`;
     }
-    return `Admissions for ${career.name} commonly happen through central university entrance (like CUET-UG) or direct merit based on Class 12 board marks.`;
+
+    if (q.includes('exam') || q.includes('entrance') || q.includes('jee') || q.includes('neet') || q.includes('clat') || q.includes('uceed') || q.includes('cuet')) {
+      const exams = career.pathways.flatMap(p => p.exams || []);
+      if (exams.length > 0) {
+        return `Key verified entrance examinations for ${career.name} include: ${exams.map(e => `${e.name} (${e.officialUrl})`).join(', ')}. Dates and formats update annually on their respective official portals.`;
+      }
+      return `Admissions for ${career.name} commonly happen through central university entrance (like CUET-UG) or direct merit based on Class 12 board marks.`;
+    }
+
+    if (q.includes('salary') || q.includes('earn') || q.includes('money') || q.includes('package') || q.includes('lpa')) {
+      return `In India, typical starter packages for ${career.name} range from ${career.salaryRange.entry}. With 5–8 years of proven experience, mid-career professionals typically earn ${career.salaryRange.mid}. Actual compensation varies based on portfolio, institute, and employer scale.`;
+    }
+
+    if (q.includes('hard') || q.includes('difficult') || q.includes('stress') || q.includes('work life') || q.includes('reality')) {
+      return `Like any high-impact career, ${career.name} comes with real trade-offs: ${career.uncertainties.join(' ')} Focusing on genuine curiosity and consistent skill building during Classes 9-12 makes the journey significantly more manageable.`;
+    }
+
+    return `Regarding ${career.name}: ${career.summary} In a typical day, professionals "${career.dayInLife[0]}". The standard pathway starts with: ${career.pathways[0]?.title} (${career.pathways[0]?.streamRequired}). Feel free to ask about specific exams, daily routines, or school subject combinations!`;
   }
 
-  if (q.includes('salary') || q.includes('earn') || q.includes('money') || q.includes('package')) {
-    return `In India, typical starter packages for ${career.name} range from ${career.salaryRange.entry}. With 5–8 years of proven experience, mid-career professionals typically earn ${career.salaryRange.mid}. Actual compensation varies based on portfolio, institute, and employer scale.`;
+  // General Career Mentoring Queries (Indian School Student Context)
+  if (q.includes('stream') || q.includes('science') || q.includes('commerce') || q.includes('humanities') || q.includes('arts') || q.includes('decide between')) {
+    return `When choosing your Class 11 stream:
+1. Science (PCM/PCB): Ideal if you enjoy analytical problem-solving, laboratory science, or wish to explore engineering, medicine, pure science research, or architecture. It keeps the maximum technical college options open.
+2. Commerce (with or without Applied Math): Excellent for finance, chartered accountancy (CA), business management, economics, and corporate law. Mathematics is strongly recommended for premier university economics.
+3. Humanities / Arts: High-impact route for law (CLAT), design (UCEED/NID), civil services (UPSC), public policy, journalism, psychology, and international relations.
+Focus on the subjects you genuinely enjoy reading for hours, rather than peer expectations!`;
   }
 
-  if (q.includes('hard') || q.includes('difficult') || q.includes('stress') || q.includes('work life')) {
-    return `Like any high-impact career, ${career.name} comes with real trade-offs: ${career.uncertainties.join(' ')} Focusing on genuine curiosity and consistent skill building during Classes 9-12 makes the journey significantly more manageable.`;
+  if (q.includes('creativity') || q.includes('creative') || (q.includes('tech') && q.includes('art'))) {
+    return `Outstanding careers that blend creativity and technology in India:
+1. UX / Product Designer: Design intuitive mobile and web applications (Entry: 4-yr B.Des via UCEED/NID/NIFT; starter packages 6-12 LPA).
+2. Creative Technologist & Game Developer: Build interactive 3D virtual worlds, games, and AR/VR simulations.
+3. Digital Product Manager: Bridge user empathy, design thinking, and software engineering.
+4. Architectural & Computational Designer: Combine spatial art with algorithmic modeling and sustainable construction.
+You can explore our interactive UX Screen Fixer simulation in the Simulations tab to try it firsthand!`;
   }
 
-  return `Regarding ${career.name}: ${career.summary} In a typical day, professionals "${career.dayInLife[0]}". The standard pathway starts with: ${career.pathways[0]?.title} (${career.pathways[0]?.streamRequired}). Feel free to ask about specific exams, daily routines, or school subject combinations!`;
+  if (q.includes('besides engineering') || q.includes('after 12th') || q.includes('after class 12') || q.includes('other than engineering')) {
+    return `High-growth careers after Class 12 outside traditional engineering:
+1. Design & UI/UX (B.Des via UCEED, NID, NIFT): Rapidly expanding technology design field.
+2. Corporate Law & Intellectual Property (5-yr Integrated BA LLB/BBA LLB via CLAT, AILET).
+3. Chartered Accountancy (CA) & Investment Banking: Highly merit-driven via ICAI.
+4. Pure Scientific Research (BS-MS via IISER IAT, NISER NEST): Astrophysics, quantum computing, biotechnology.
+5. Armed Forces Officer (NDA Exam via UPSC): Leadership, operational strategy, and flight tech.
+6. Behavioral Economics & Data Journalism (BA/B.Sc via CUET-UG).`;
+  }
+
+  if (q.includes('compare') || q.includes('comparison')) {
+    return `To compare two careers effectively, evaluate these 4 core dimensions:
+1. Daily Work Reality: Do you prefer coding and data analysis, visual prototyping, or fieldwork with people?
+2. High School Preparation: Does one mandate Science (like Medicine or Engineering), or can you enter from any stream (like Design or Law)?
+3. Educational Timeline: 3-4 years for BA/B.Sc/B.Com vs 5.5 years for MBBS or 5 years for Integrated Law.
+4. Reality Checks & Pressures: Heavy exam competition vs continuous portfolio building.
+You can click the "Compare" button in the top navigation to view our side-by-side career matrix!`;
+  }
+
+  if (q.includes('coaching') || q.includes('expensive') || q.includes('prepare without') || q.includes('free') || q.includes('self study')) {
+    return `You do NOT need expensive coaching to build an exceptional career in India:
+1. NCERT Textbooks: The official foundation for CBSE, CUET, and core JEE/NEET concepts. Master every chapter and exemplar exercise.
+2. Free National Portals: Swayam (Ministry of Education), DIKSHA, NPTEL, and Khan Academy provide free video courses taught by premier faculty.
+3. Official Previous Year Questions (PYQs): Freely downloadable from NTA, UPSC, and ICAI websites. Solving 5 years of PYQs under timed conditions gives the best test preparation.
+4. Open Source & Hands-on Projects: For design and coding, building a real portfolio or GitHub repository matters far more than certificates.`;
+  }
+
+  if (q.includes('exam') || q.includes('jee') || q.includes('neet') || q.includes('cuet') || q.includes('clat')) {
+    return `Key national entrance exams in India for Classes 11–12:
+- Engineering & Tech: JEE Main & Advanced (jeemain.nta.nic.in)
+- Medical & Biotech: NEET-UG (neet.nta.nic.in)
+- Design & Innovation: UCEED (uceed.iitb.ac.in) & NID DAT (admissions.nid.edu)
+- Law: CLAT (consortiumofnlus.ac.in) & AILET (nationallawuniversitydelhi.in)
+- Central Universities: CUET-UG (cuetug.nta.online)
+- Chartered Accountancy: CA Foundation (icai.org)
+- Defense: National Defence Academy (upsc.gov.in)
+Always verify official eligibility and application deadlines directly on conducting agency websites!`;
+  }
+
+  return `Hello! I'm Gemma, your AI career mentor for Classes 9–12. I can help you explore:
+- Class 11-12 stream selection (Science, Commerce, Humanities)
+- Verified entrance exams (JEE, NEET, CUET, CLAT, UCEED, NID, CA Foundation)
+- Emerging career fields and realistic Indian salary benchmarks
+- Low-cost, self-study preparation methods without expensive coaching
+Ask me any question to get started, or select one of the suggested starter prompts below!`;
 }

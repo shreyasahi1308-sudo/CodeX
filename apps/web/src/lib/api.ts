@@ -184,12 +184,22 @@ export const api = {
     return { data: data.data, meta: data.meta };
   },
 
-  async askMentor(careerId: string, question: string, history: any[] = []): Promise<{ reply: string; meta: AIMeta }> {
-    const res = await fetch(`${API_BASE}/careers/${careerId}/ask`, {
+  async askMentor(careerId: string | undefined | null, question: string, history: any[] = []): Promise<{ reply: string; meta: AIMeta }> {
+    const endpoint = careerId && careerId !== 'general'
+      ? `${API_BASE}/careers/${careerId}/ask`
+      : `${API_BASE}/mentor/chat`;
+
+    const res = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question, history }),
+      body: JSON.stringify({ question, history, careerId: careerId || undefined }),
     });
+
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({ error: 'Inference request failed' }));
+      throw new Error(errData.error || `Request failed with status ${res.status}`);
+    }
+
     const data = await res.json();
     return { reply: data.reply, meta: data.meta };
   },

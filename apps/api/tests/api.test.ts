@@ -198,4 +198,45 @@ describe('Career Discovery Platform - API Integration Tests', () => {
     const getData2 = await getRes2.json();
     expect(getData2.count).toBe(0);
   });
+
+  it('POST /api/careers/:id/ask and POST /api/mentor/chat return mentor answers with context', async () => {
+    // 1. Career-specific ask
+    const careerRes = await fetch(`${baseUrl}/careers/ux-designer/ask`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        question: 'What stream is required in Class 11?',
+        history: [],
+      }),
+    });
+    expect(careerRes.status).toBe(200);
+    const careerData = await careerRes.json();
+    expect(careerData.success).toBe(true);
+    expect(careerData.reply).toBeDefined();
+    expect(careerData.reply.length).toBeGreaterThan(20);
+    expect(careerData.meta).toBeDefined();
+
+    // 2. General mentor chat (e.g. from Interactive Career Mentor card)
+    const generalRes = await fetch(`${baseUrl}/mentor/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        question: 'How do I decide between Science, Commerce, and Humanities?',
+        history: [],
+      }),
+    });
+    expect(generalRes.status).toBe(200);
+    const generalData = await generalRes.json();
+    expect(generalData.success).toBe(true);
+    expect(generalData.reply).toContain('Science');
+    expect(generalData.meta.model).toBeDefined();
+
+    // 3. Validation: empty question rejected
+    const emptyRes = await fetch(`${baseUrl}/mentor/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: '   ' }),
+    });
+    expect(emptyRes.status).toBe(400);
+  });
 });

@@ -91,6 +91,30 @@ export const careerController = {
     }
   },
 
+  async generalMentorChat(req: Request, res: Response) {
+    try {
+      const { question, history, careerId } = req.body;
+
+      if (!question || typeof question !== 'string' || question.trim().length === 0) {
+        return res.status(400).json({ success: false, error: 'A question string is required' });
+      }
+
+      if (question.length > 1000) {
+        return res.status(400).json({ success: false, error: 'Message exceeds maximum length of 1000 characters' });
+      }
+
+      let career = undefined;
+      if (careerId && typeof careerId === 'string' && careerId !== 'general') {
+        career = careerRepo.getById(careerId);
+      }
+
+      const response = await askCareerMentor(career, question.trim(), history || []);
+      res.json({ success: true, ...response });
+    } catch (err: any) {
+      res.status(500).json({ success: false, error: 'Failed to get mentor response', details: err.message });
+    }
+  },
+
   compare(req: Request, res: Response) {
     try {
       const { careerIds } = req.body;

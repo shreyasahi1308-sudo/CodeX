@@ -23,6 +23,7 @@ export function App() {
   // Modals & Drawers
   const [selectedCareer, setSelectedCareer] = useState<{ career: Career; scorePercent?: number } | null>(null);
   const [mentorCareer, setMentorCareer] = useState<Career | null>(null);
+  const [isMentorOpen, setIsMentorOpen] = useState<boolean>(false);
   const [activeSimulationId, setActiveSimulationId] = useState<string | null>(null);
   const [compareCareerIds, setCompareCareerIds] = useState<string[] | null>(null);
   const [isSavedDrawerOpen, setIsSavedDrawerOpen] = useState<boolean>(false);
@@ -109,6 +110,10 @@ export function App() {
             onStartQuiz={() => setActiveTab('questionnaire')}
             onBrowseCareers={() => setActiveTab('catalog')}
             onExploreSimulations={() => setActiveTab('activities')}
+            onOpenMentor={() => {
+              setMentorCareer(null);
+              setIsMentorOpen(true);
+            }}
           />
         )}
 
@@ -154,7 +159,10 @@ export function App() {
           scorePercent={selectedCareer.scorePercent}
           userAnswers={userAnswers}
           onClose={() => setSelectedCareer(null)}
-          onOpenMentor={career => setMentorCareer(career)}
+          onOpenMentor={career => {
+            setMentorCareer(career);
+            setIsMentorOpen(true);
+          }}
           onLaunchSimulation={id => setActiveSimulationId(id)}
           isSaved={isCareerSaved(selectedCareer.career.id)}
           onToggleSave={() => handleToggleSave(selectedCareer.career.id)}
@@ -162,10 +170,13 @@ export function App() {
       )}
 
       {/* "Ask Gemma" Career Mentor Drawer */}
-      {mentorCareer && (
+      {isMentorOpen && (
         <MentorDrawer
           career={mentorCareer}
-          onClose={() => setMentorCareer(null)}
+          onClose={() => {
+            setIsMentorOpen(false);
+            setMentorCareer(null);
+          }}
         />
       )}
 
