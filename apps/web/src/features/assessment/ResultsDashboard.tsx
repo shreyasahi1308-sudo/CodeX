@@ -200,8 +200,61 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
           </h2>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '24px' }}>
-          {filteredMain.map((rec, index) => {
+        {filteredMain.length === 0 ? (
+          <div
+            className="brutal-card"
+            style={{
+              padding: '44px 24px',
+              textAlign: 'center',
+              background: '#FFFFFF',
+              borderWidth: '3px',
+              marginBottom: '32px',
+            }}
+          >
+            <div
+              style={{
+                display: 'inline-flex',
+                padding: '12px',
+                background: 'var(--accent-yellow)',
+                border: '2px solid var(--border-ink)',
+                borderRadius: '8px',
+                marginBottom: '16px',
+                boxShadow: '2px 2px 0 var(--border-ink)',
+              }}
+            >
+              <Layers className="w-6 h-6 text-black" />
+            </div>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 900, textTransform: 'uppercase', marginBottom: '8px' }}>
+              {streamFilter !== 'all'
+                ? `No Recommendations in ${streamFilter.toUpperCase()} Stream`
+                : 'No Career Recommendations Available'}
+            </h3>
+            <p style={{ color: 'var(--ink-secondary)', fontSize: '0.92rem', maxWidth: '460px', margin: '0 auto 20px auto', lineHeight: '1.5', fontWeight: 500 }}>
+              {streamFilter !== 'all'
+                ? 'Your top matches are currently in other academic streams. Clear your filter to explore all tailored recommendations.'
+                : 'No career matches could be generated from the current ratings. Retake the discovery quiz to build a new profile.'}
+            </p>
+            {streamFilter !== 'all' ? (
+              <button
+                id="btn-clear-stream-filter"
+                className="btn-brutal btn-lime btn-brutal-sm"
+                onClick={() => setStreamFilter('all')}
+              >
+                View All Streams ({results.mainRecommendations.length} Careers)
+              </button>
+            ) : (
+              <button
+                id="btn-empty-retake-quiz"
+                className="btn-brutal btn-lime btn-brutal-sm"
+                onClick={onRetake}
+              >
+                <RotateCcw className="w-4 h-4" /> Retake Discovery Quiz
+              </button>
+            )}
+          </div>
+        ) : (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '24px' }}>
+            {filteredMain.map((rec, index) => {
             const isSaved = isCareerSaved(rec.career.id);
             const isSelected = selectedForCompare.includes(rec.career.id);
 
@@ -355,7 +408,8 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
             );
           })}
         </div>
-      </div>
+      )}
+    </div>
 
       {/* Section 3: Stretch Recommendations */}
       {filteredStretch.length > 0 && (
