@@ -30,7 +30,7 @@ export function App() {
 
   // Session & Bookmarks Persistence
   const [sessionId, setSessionId] = useState<string>(() => {
-    return localStorage.getItem('pathlab_session_id') || `sess_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+    return localStorage.getItem('figurout_session_id') || localStorage.getItem('pathlab_session_id') || `sess_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
   });
   const [savedCareerIds, setSavedCareerIds] = useState<string[]>([]);
   const [aiStatus, setAiStatus] = useState<{ configured: boolean; model: string }>({
@@ -39,7 +39,7 @@ export function App() {
   });
 
   useEffect(() => {
-    localStorage.setItem('pathlab_session_id', sessionId);
+    localStorage.setItem('figurout_session_id', sessionId);
 
     // Initial health check
     api.getHealth()
@@ -66,7 +66,7 @@ export function App() {
     setUserAnswers(answers);
     if (data.sessionId) {
       setSessionId(data.sessionId);
-      localStorage.setItem('pathlab_session_id', data.sessionId);
+      localStorage.setItem('figurout_session_id', data.sessionId);
     }
     setActiveTab('results');
   };
