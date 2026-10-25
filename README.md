@@ -333,7 +333,7 @@ const completion = await client.chat.completions.create({
 Contains 15+ verified career profiles spanning all major streams:
 - **Science (PCM)**: Software Engineer & AI Architect, Data Scientist, Aerospace Systems Engineer, Sustainable Architect, Cybersecurity Analyst.
 - **Science (PCB)**: Biomedical & Genetics Researcher, Sports Physiotherapist, Environmental Scientist.
-- **Commerce**: Chartered Accountant (ICAI), Investment Banker & Equity Analyst.
+- **Commerce**: Chartered Accountant (ICAI) | Investment Banking & Equity Research Professional.
 - **Humanities & Law**: Corporate Lawyer & Legal Counsel (CLAT), Clinical & Child Psychologist, Civil Servant (IAS/IPS/IFS).
 - **Design & Media**: UX / Product Designer (UCEED/NID), Brand Strategist & Growth Marketer.
 
